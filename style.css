@@ -2,7 +2,7 @@
   --navy:#0a2a43; --navy-deep:#061a2b; --royal:#154a74; --mid:#0f3d63;
   --gold:#d4af37; --paper:#f7edd4; --ink:#0b1320;
   --envW: min(76vw, 420px); --envH: calc(var(--envW) * 0.66);
-  --speed: .70;
+  --speed: .85;
    --sealH: clamp(54px, 7.6vw, 72px); /* ارتفاع الختم العلوي */
 }
 
@@ -11,6 +11,8 @@ html,body{height:100%}
 body{
   margin:0; color:var(--ink);
   font-family:"Noto Naskh Arabic","Cormorant Garamond",serif;
+    -webkit-font-smoothing: antialiased;
+    text-size-adjust: 100%;
   background:
     radial-gradient(1200px 800px at 50% -15%, #15324f 0%, #0b2136 45%, #071423 100%),
     url("data:image/svg+xml;utf8,\
@@ -27,6 +29,15 @@ body{
 }
 
 .stage{ width:100%; height:100%; display:grid; place-items:center; perspective:1600px; position:relative; padding: clamp(8px, 3vw, 24px); }
+@supports  (padding: env(safe-area-inset-top)) {
+  .stage{
+    padding-top: calc(clamp(8px,3vw,24px) + env(safe-area-inset-top));
+    padding-right: calc(clamp(8px,3vw,24px) + env(safe-area-inset-right));
+    padding-bottom: calc(clamp(8px,3vw,24px) + env(safe-area-inset-bottom));
+    padding-left: calc(clamp(8px,3vw,24px) + env(safe-area-inset-left));
+  }
+}
+
 
 /* Envelope */
 .envelope3d{
@@ -34,7 +45,7 @@ body{
   position:relative; transform-style:preserve-3d;
   background:transparent; border:none; cursor:pointer;
   filter: drop-shadow(0 20px 40px rgba(0,0,0,.45));
-  transition: transform calc(.2s * var(--speed)) ease;
+  transition: transform calc(.45s * var(--speed)) cubic-bezier(.33,1,.68,1);
   touch-action: manipulation; will-change: transform;
 }
 .envelope3d:active{ transform: translateY(1px) }
@@ -69,14 +80,18 @@ body{
 
 /* Portrait letter */
 .letter.portrait{
-  width: min(86vw, 480px);
-  height: min(90vh, 760px);
-  position:absolute; left:50%; top: calc(35% + 10px);
-  transform: translate(-50%,0) translateZ(0);
-  opacity:0;
-}
+    width: min(86vw, 480px);
+    height: min(90vh, 760px);
+    position:absolute; left:50%; top: calc(35% + 10px);
+    transform: translate(-50%,0) translateZ(0);
+    opacity:0;
+    transition: opacity calc(.8s * var(--speed)) cubic-bezier(.33,1,.68,1), transform calc(.8s * var(--speed)) cubic-bezier(.33,1,.68,1);
+  }
+
 .paper{
-  width:100%; height:100%; background: var(--paper); border: 1px solid var(--gold);
+    width:100%; height:100%; background: var(--paper);
+    background-image: radial-gradient(circle at 50% 20%, rgba(255,255,255,.6), transparent 70%);
+    border: 1px solid var(--gold);
   box-shadow:0 10px 24px rgba(0,0,0,.35); border-radius: 10px; overflow: hidden; position: relative;
 }
 .paper::before{
@@ -104,8 +119,12 @@ body{
   direction: rtl; unicode-bidi: plaintext;
   color: #1d1408;
   font-family: "Lateef","Aref Ruqaa","Noto Naskh Arabic","Great Vibes","Cormorant Garamond",serif;
-  white-space: pre-wrap;
-}
+    letter-spacing: .02em;
+    font-variant-ligatures: contextual discretionary-ligatures;
+    font-feature-settings: "calt","liga","clig","swsh";
+    text-shadow: 0 1px 1px rgba(0,0,0,.12);
+    white-space: pre-wrap;
+  }
 .message.handwrite *{ font-family: inherit; }
 
 .caret{ position:absolute; width:2px; height:1.2em; background:#5b4020; opacity:0; animation: blink 1s step-end infinite; }
@@ -156,20 +175,20 @@ body.sig-left .signature-block{ right:auto; left:28px; }
 }
 
 .particles{ position:fixed; inset:0; pointer-events:none; z-index:5; }
-.heart{ position:absolute; width:18px; height:18px; transform: rotate(-45deg); opacity:0; background: linear-gradient(135deg, #ff9aa2, #ffd3d6); filter: drop-shadow(0 3px 8px rgba(255, 150, 170, .45)); }
+.heart{ position:absolute; width:18px; height:18px; transform: rotate(-45deg); opacity:0; background: linear-gradient(135deg, #ff9aa2, #ffd3d6); will-change: transform, opacity; filter: drop-shadow(0 3px 8px rgba(255, 150, 170, .45)); }
 .heart::before,.heart::after{ content:""; position:absolute; width:18px; height:18px; background:inherit; border-radius:50%; }
 .heart::before{ top:-9px; left:0; } .heart::after{ top:0; left:9px; }
 
 /* States */
 .stage.shake .envelope3d{ animation:shake calc(.35s * var(--speed)) }
 @keyframes shake{ 0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)} }
-.envelope-open .env-flap{ transform: rotateX(180deg) translateZ(6px); transition: transform calc(1s * var(--speed)) ease }
+.envelope-open .env-flap{ transform: rotateX(180deg) translateZ(6px); transition: transform calc(1.4s * var(--speed)) cubic-bezier(.33,1,.68,1); }
 .envelope-open .letter{ opacity:1; transform: translate(-50%,-6px) }
 .envelope-retreat .envelope3d{ transform: translateZ(-120px) scale(.97); filter: blur(.4px) drop-shadow(0 10px 16px rgba(0,0,0,.28)); opacity:.9 }
 
 .letter-reveal .message{ opacity:1; transform:none; transition: opacity calc(.5s * var(--speed)) ease .1s, transform calc(.5s * var(--speed)) ease .1s }
 
 @media (max-width:420px){
-  :root{ --envW: 90vw; --speed: .65; }
+  :root{ --envW: 90vw; --speed: .75; }
   .message.handwrite{ font-size: clamp(18px, 5vw, 22px); }
 }

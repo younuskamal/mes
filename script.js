@@ -21,7 +21,7 @@
   let clicks = 0;
   let sequenceStarted = false;
 
-  const SPEED = 0.70;
+  const SPEED = 0.85;
   const t = (ms)=> Math.round(ms * SPEED);
 
   // Hearts
