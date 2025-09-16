@@ -44,7 +44,9 @@ body{
   width:var(--envW); height:var(--envH); position:relative; transform-style:preserve-3d;
   background:transparent; border:none; cursor:pointer; z-index:2;
   filter: drop-shadow(0 26px 44px rgba(0,0,0,.48));
+  transition: transform .18s ease-out, filter .22s ease;
 }
+.envelope3d:hover{ filter: drop-shadow(0 30px 58px rgba(0,0,0,.56)); }
 .env{ position:absolute; inset:0; border-radius:14px; pointer-events:none; }
 .env-back{ background: linear-gradient(var(--brown-dark),#2E1C13); border:2px solid var(--gold); transform: translateZ(-4px);}
 .env-front{ background: linear-gradient(to bottom,var(--brown-mid),var(--brown-dark) 60%,#2E1C13 100%); border:2px solid var(--gold); clip-path: polygon(0 35%,100% 35%,100% 100%,0 100%); transform: translateZ(2px);}
@@ -86,28 +88,64 @@ body.ribbon-loose .bow .tail.right{ transform: translate(18%,-38%) rotate(18deg)
   overflow:hidden;
   padding: calc(18px + var(--sealH) + 18px) 28px 72px;
 }
-.message-frame{
-  position:relative; margin: 6px 6px 0 6px;
-  padding: 18px 18px 22px; border-radius: 14px;
-  border:1px solid rgba(212,175,55,.38);
-  box-shadow: inset 0 0 10px rgba(212,175,55,.12);
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(212,175,55,.02));
+/* Victorian subtle texture and border filigree */
+.paper::before{
+  content:""; position:absolute; inset:8px; border-radius: 14px; pointer-events:none;
+  background:
+    radial-gradient(12px 12px at 14px 14px, rgba(212,175,55,.55), transparent 60%),
+    radial-gradient(12px 12px at calc(100% - 14px) 14px, rgba(212,175,55,.55), transparent 60%),
+    radial-gradient(12px 12px at 14px calc(100% - 14px), rgba(212,175,55,.55), transparent 60%),
+    radial-gradient(12px 12px at calc(100% - 14px) calc(100% - 14px), rgba(212,175,55,.55), transparent 60%);
+  box-shadow: inset 0 0 0 1px rgba(212,175,55,.45), inset 0 0 20px rgba(212,175,55,.15);
 }
+.paper::after{
+  content:""; position:absolute; inset:0; pointer-events:none; border-radius:18px;
+  background: radial-gradient(800px 420px at -10% 0%, rgba(139,107,34,.06), transparent 60%),
+              radial-gradient(800px 420px at 110% 100%, rgba(139,107,34,.06), transparent 60%);
+}
+.message-frame{
+  margin:0;
+  padding:0;
+  border:none;
+  box-shadow:none;
+  background:transparent;
+  max-height:none;
+}
+
+/* Top/bottom ornaments */
+.message-frame::before,.message-frame::after{
+  content:"❦"; position:absolute; left:50%; transform: translateX(-50%);
+  color: rgba(212,175,55,.9); font-size: 18px; text-shadow: 0 0 10px rgba(212,175,55,.35);
+}
+.message-frame::before{ top:6px; }
+.message-frame::after{ bottom:6px; }
 
 /* الختم العلوي */
 .wax-seal.header{
   position:absolute; width: var(--sealH); height: var(--sealH);
   left:50%; top: 18px; transform: translate(-50%,0);
   border-radius:50%;
-  background: radial-gradient(circle at 35% 35%, #6B4226, #2E1C12 68%);
+  background: radial-gradient(circle at 32% 28%, #7B4A2F, #4B2E2A 50%, #2E1C12 78%);
   border: 2px solid rgba(0,0,0,.35);
   display:grid; place-items:center;
-  box-shadow: inset 0 4px 8px rgba(255,255,255,.2), 0 10px 22px rgba(0,0,0,.45);
+  box-shadow: inset 0 6px 12px rgba(255,255,255,.28), inset 0 -8px 14px rgba(0,0,0,.35), 0 12px 26px rgba(0,0,0,.48);
   animation: sealPulse 6.4s ease-in-out infinite;
 }
+.wax-seal.header::before{
+  content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none;
+  background: radial-gradient(ellipse at 35% 30%, rgba(255,255,255,.38), rgba(255,255,255,0) 60%);
+  filter: blur(1px);
+}
+.wax-seal.header::after{
+  content:""; position:absolute; left:-60%; top:-60%; width:220%; height:220%;
+  background: linear-gradient(120deg, rgba(255,255,255,0) 45%, rgba(255,255,255,.33) 50%, rgba(255,255,255,0) 55%);
+  transform: rotate(12deg);
+  animation: sealSheen 5.8s ease-in-out infinite;
+  border-radius:50%; pointer-events:none;
+}
 .seal-svg{ width:78%; height:78%; }
-.seal-svg circle{ fill:none; stroke:rgba(212,175,55,.7); stroke-width:2; }
-.seal-svg text{ font-family:"Great Vibes",cursive; font-size:34px; letter-spacing:-2px; fill: rgba(212,175,55,.95); animation: sealTextPulse 6.4s ease-in-out infinite; }
+.seal-svg circle{ fill:none; stroke:rgba(212,175,55,.78); stroke-width:2.4; filter: drop-shadow(0 0 6px rgba(212,175,55,.35)); }
+.seal-svg text{ font-family:"Great Vibes",cursive; font-size:34px; letter-spacing:-2px; fill: rgba(244,210,120,.98); paint-order: stroke fill; stroke: rgba(255,255,255,.32); stroke-width: .6; filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); animation: sealTextPulse 6.4s ease-in-out infinite; }
 @keyframes sealPulse{
   0%,70%{ box-shadow: inset 0 4px 8px rgba(255,255,255,.22), 0 10px 22px rgba(0,0,0,.45), 0 0 10px rgba(212,175,55,.15); }
   78%{   box-shadow: inset 0 5px 10px rgba(255,255,255,.3), 0 12px 28px rgba(0,0,0,.48), 0 0 22px rgba(212,175,55,.32); }
@@ -118,6 +156,12 @@ body.ribbon-loose .bow .tail.right{ transform: translate(18%,-38%) rotate(18deg)
   82%{    filter: drop-shadow(0 0 12px rgba(212,175,55,.75)); }
   100%{   filter: drop-shadow(0 0 6px rgba(212,175,55,.4)); }
 }
+@keyframes sealSheen{
+  0%{ transform: translate(-20%, -20%) rotate(12deg); opacity:.0; }
+  36%{ transform: translate(0,0) rotate(12deg); opacity:.85; }
+  52%{ transform: translate(12%, 12%) rotate(12deg); opacity:.0; }
+  100%{ transform: translate(12%, 12%) rotate(12deg); opacity:.0; }
+}
 
 /* النص */
 .message.handwrite{
@@ -127,11 +171,19 @@ body.ribbon-loose .bow .tail.right{ transform: translate(18%,-38%) rotate(18deg)
   white-space: pre-wrap;
   color: var(--ink);
   text-align: start;
+  overflow-wrap: anywhere; word-break: break-word; hyphens: auto;
   direction: rtl;       /* الافتراضي عربي */
   unicode-bidi: plaintext;
 }
 html[lang="en"] .message.handwrite{ direction:ltr; font-family:"Great Vibes",cursive; }
 html[lang="ar"] .message.handwrite{ direction:rtl;  font-family:"Aref Ruqaa",serif; }
+/* Drop cap for Latin (best-effort) */
+html[lang="en"] .message.handwrite::first-letter{
+  font-size: calc(var(--text-size)*2.1);
+  line-height: 1;
+  float:left; margin: 2px 10px 0 2px;
+  color:#7b5b1a; text-shadow: 0 1px 0 #f0e0b8, 0 0 14px rgba(212,175,55,.35);
+}
 
 .gold{
   background: linear-gradient(90deg, #8b6b22, #d4af37, #8b6b22);
@@ -140,13 +192,13 @@ html[lang="ar"] .message.handwrite{ direction:rtl;  font-family:"Aref Ruqaa",ser
 }
 
 .caret{
-  display:inline-block; width:2px; height:1.2em; background:#6B4226;
-  animation: blink 1s step-end infinite; vertical-align:bottom; opacity:0;
+  display:none !important;
 }
+
 @keyframes blink{ 50%{opacity:0} }
 
 /* التوقيع */
-.signature-block{ position: absolute; bottom: 20px; right: 26px; text-align:center; }
+.signature-block{ position: absolute; bottom: 32px; right: 26px; text-align:center; }
 .signature-name{ font-family:"Great Vibes","Aref Ruqaa",cursive; font-size: clamp(22px, 4.8vw, 30px); color: #4B2E2A; }
 
 /* زر الإغلاق */
@@ -181,7 +233,9 @@ html[lang="ar"] .message.handwrite{ direction:rtl;  font-family:"Aref Ruqaa",ser
 .notice-title{ font-weight:800; font-size: clamp(20px, 3.6vw, 26px); color:#fff4dd; letter-spacing:1px; }
 .notice-close{ border:none; background:transparent; font-size:22px; cursor:pointer; color:#f8ead0; }
 .notice.locked .notice-close{ opacity:.35; pointer-events:none; }
-.notice-text{ padding:22px 26px 10px; font-size: clamp(16px, 3vw, 18px); line-height:1.9; color:#fdf6e8; white-space: pre-wrap; direction: rtl; text-align: start; }
+.notice-text{ padding:22px 26px 10px; font-size: clamp(16px, 3vw, 18px); line-height:1.9; color:#fdf6e8; white-space: pre-wrap; direction: rtl; text-align: start; max-height: min(62vh, 520px); overflow:auto; -webkit-overflow-scrolling: touch; }
+.notice-text{ scrollbar-width: none; }
+.notice-text::-webkit-scrollbar{ width:0; height:0; }
 .notice-actions{ display:flex; justify-content:center; padding:18px 0 26px; }
 .notice-ok{ width:78px; height:78px; border-radius:50%; border:2px solid rgba(212,175,55,.65); background: radial-gradient(circle at 40% 32%, #f8deb0, #d0a242 68%, #8e6530 100%); color:#3f2914; font-weight:600; font-size:18px; letter-spacing:.6px; cursor:pointer; box-shadow: inset 0 4px 7px rgba(255,255,255,.45), 0 12px 22px rgba(0,0,0,.45), 0 0 20px rgba(212,175,55,.45); }
 
@@ -190,4 +244,50 @@ html[lang="ar"] .message.handwrite{ direction:rtl;  font-family:"Aref Ruqaa",ser
   :root{ --envW: 86vw; }
   .message.handwrite{ --text-size: 18px; --line: 1.85; }
   .paper{ padding: calc(14px + var(--sealH) + 14px) 18px 64px; }
+  .message-frame::before,.message-frame::after{ font-size:16px; }
 }
+
+/* Responsive fit helpers (appended) */
+.message-frame{ font-size: var(--text-size); line-height: var(--line); transition: font-size .24s ease, line-height .24s ease; }
+.message.handwrite{ margin: 0; transform-origin: top center; will-change: font-size, transform; }
+.caret{ transform-origin: top left; }
+
+/* Page spacing & signature reserve */
+:root{
+  --padX: clamp(18px, 3.2vw, 28px);
+  --padT: clamp(16px, 2.8vh, 22px);
+  --padB: clamp(24px, 4.6vh, 32px);
+  --sigH: clamp(56px, 10vh, 90px);
+}
+.paper{ padding: calc(var(--padT) + var(--sealH)) var(--padX) calc(var(--padB) + var(--sigH)); }
+/* Leave space for seal + signature */
+.message-frame{ max-height: calc(100% - var(--sealH) - var(--sigH) - 84px); }
+/* Full-justify lines; keep last line natural; first line shortened */
+.message.handwrite{
+  text-align: justify;
+  text-justify: inter-word;
+  text-align-last: start;
+  text-indent: 1.4em;
+}
+/* First line subtle glow */
+.message.handwrite::first-line{
+  text-shadow: 0 0 8px rgba(212,175,55,.22), 0 0 14px rgba(212,175,55,.12);
+}
+
+/* Mobile overrides without shrinking font */
+@media (max-width: 600px){
+  .message.handwrite{
+    --text-size: 20px;   /* حجم أصغر شوي للخط */
+    --line: 1.7;         /* مسافة أسطر أقصر للهواتف */
+    text-align: justify; /* ترتيب النص الإنجليزي */
+    padding: 0 8px;      /* هوامش صغيرة يمين ويسار */
+  }
+
+  .paper{
+    padding: calc(var(--padT) + var(--sealH) + 30px)   /* 🔥 نزّل النص أكثر عن الختم */
+             calc(var(--padX) - 2px) 
+             calc(var(--padB) + var(--sigH) - 4px);
+    border-radius: 14px; /* زوايا أخف على الموبايل */
+  }
+}
+
