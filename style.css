@@ -1,175 +1,193 @@
 :root{
-  --navy:#0a2a43; --navy-deep:#061a2b; --royal:#154a74; --mid:#0f3d63;
-  --gold:#d4af37; --paper:#f7edd4; --ink:#0b1320;
-  --envW: min(76vw, 420px); --envH: calc(var(--envW) * 0.66);
-  --speed: .70;
-   --sealH: clamp(54px, 7.6vw, 72px); /* ارتفاع الختم العلوي */
+  --brown-dark:#4B2E2A;
+  --brown-mid:#6B4226;
+  --paper:#FBF1DB;
+  --ink:#2A1C12;
+  --gold:#d4af37;
+
+  --envW:min(78vw, 440px);
+  --envH:calc(var(--envW)*0.66);
+  --sealH:clamp(54px, 8vw, 74px);
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0; color:var(--ink);
-  font-family:"Noto Naskh Arabic","Cormorant Garamond",serif;
+  font-family:"Aref Ruqaa","Great Vibes",serif;
   background:
-    radial-gradient(1200px 800px at 50% -15%, #15324f 0%, #0b2136 45%, #071423 100%),
-    url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'>\
-<defs><pattern id='dam' width='220' height='220' patternUnits='userSpaceOnUse'>\
-<g fill='%230f2d4a' opacity='.22'>\
-<path d='M110 26c14 18 32 18 46 30s14 30 0 42-32 12-46 30-32 18-46 6-14-30 0-42 32-12 46-30z'/>\
-<circle cx='55' cy='55' r='8'/>\
-<circle cx='165' cy='165' r='8'/>\
-<path d='M26 165c12-6 24-6 36 6-12 12-24 12-36 6zM194 55c-12 6-24 6-36-6 12-12 24-12 36-6z'/>\
-</g></pattern></defs>\
-<rect width='100%' height='100%' fill='url(%23dam)'/></svg>");
-  background-size: cover, 360px; background-attachment: fixed; overflow:hidden;
+    radial-gradient(1100px 780px at 40% -10%, #6B4226 0%, #4B2E2A 45%, #2E1C12 100%),
+    linear-gradient(0deg, rgba(40,56,40,.12), rgba(40,56,40,.05));
+  background-attachment: fixed;
+  overflow:hidden;
 }
 
-.stage{ width:100%; height:100%; display:grid; place-items:center; perspective:1600px; position:relative; padding: clamp(8px, 3vw, 24px); }
+.top-actions{
+  position:fixed; inset:14px 14px auto auto; z-index:9; display:flex; gap:10px;
+}
+.btn{
+  border:none; cursor:pointer; font-weight:700; letter-spacing:.3px;
+  padding:8px 12px; border-radius:10px; font-size:14px;
+}
+.btn-gold{
+  color:#2a1c12;
+  background: linear-gradient(145deg, #f5dfb3, #cea242 68%, #b48432 100%);
+  border:1px solid rgba(212,175,55,.7);
+  box-shadow: inset 0 2px 3px rgba(255,255,255,.45), 0 4px 12px rgba(58,40,24,.38);
+}
+.btn-gold:active{ transform: scale(.98); }
 
-/* Envelope */
+.stage{ width:100%; height:100%; display:grid; place-items:center; perspective:1400px; position:relative; }
+
+/* الظرف 3D */
 .envelope3d{
-  width:var(--envW); height:var(--envH);
-  position:relative; transform-style:preserve-3d;
-  background:transparent; border:none; cursor:pointer;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,.45));
-  transition: transform calc(.2s * var(--speed)) ease;
-  touch-action: manipulation; will-change: transform;
+  width:var(--envW); height:var(--envH); position:relative; transform-style:preserve-3d;
+  background:transparent; border:none; cursor:pointer; z-index:2;
+  filter: drop-shadow(0 26px 44px rgba(0,0,0,.48));
 }
-.envelope3d:active{ transform: translateY(1px) }
-.env, .env-ribbon, .letter-slot, .env-ornaments, .bow { pointer-events:none; }
-.env{ position:absolute; inset:0; border-radius:12px; }
-.env-back{ background: linear-gradient(#0b2744,#061a2b); border:2px solid var(--gold); transform: translateZ(-4px); }
-.env-front{ background: linear-gradient(to bottom,#154a74,#0f3d63 60%,#0b2f4e 100%); border:2px solid var(--gold); clip-path: polygon(0 35%,100% 35%,100% 100%,0 100%); box-shadow: inset 0 -10px 20px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08); transform: translateZ(2px); }
-.env-flap{ clip-path: polygon(0 0,100% 0,50% 62%); background: linear-gradient(#0f3d63,#0b2f4e); border:2px solid var(--gold); transform-origin: top center; transform: translateZ(6px); border-radius: 12px 12px 8px 8px/ 12px 12px 20px 20px; box-shadow: 0 8px 16px rgba(0,0,0,.32); }
-.env-ribbon{ position:absolute; left:0; right:0; top: calc(35% - 8px); height:16px; background: linear-gradient(90deg, rgba(212,175,55,.85), rgba(255,255,255,.15) 30%, rgba(212,175,55,.85) 70%, rgba(255,255,255,.15)); mix-blend-mode: plus-lighter; border-top:1px solid rgba(255,255,255,.25); border-bottom:1px solid rgba(0,0,0,.4); transform: translateZ(6px); border-radius: 14px/12px; }
-.env-ornaments{ position:absolute; inset:8px; border-radius:10px; border:1px solid rgba(212,175,55,.6); transform: translateZ(7px); }
-.env-ornaments::before, .env-ornaments::after{ content:""; position:absolute; width:26px; height:26px; border:2px solid rgba(212,175,55,.7); filter: drop-shadow(0 0 4px rgba(212,175,55,.25)); }
-.env-ornaments::before{ border-right:none; border-bottom:none; left:10px; top:10px; border-radius:8px 0 0 0; }
-.env-ornaments::after{ border-left:none; border-top:none; right:10px; bottom:10px; border-radius:0 0 8px 0; }
-
-/* Bow silk */
-.bow{ position:absolute; left:50%; top: calc(35% - 2px); transform: translate(-50%,-50%) translateZ(9px); width: 140px; height: 56px; }
-.bow .knot{ position:absolute; left:50%; top:50%; transform: translate(-50%,-50%); width:22px; height:22px; border-radius:6px; background: radial-gradient(circle at 30% 30%, #e9c36a, #c59a3a 70%, #9a7a2d); box-shadow: inset 0 2px 3px rgba(255,255,255,.3), 0 3px 6px rgba(0,0,0,.35); }
-.bow .loop{ position:absolute; top:50%; width:56px; height:40px; border-radius:50% 50% 40% 40%; background: radial-gradient(circle at 40% 30%, #f0d98a, #cfa242 70%, #9a7a2d); box-shadow: inset 0 2px 4px rgba(255,255,255,.3), 0 4px 10px rgba(0,0,0,.35); }
+.env{ position:absolute; inset:0; border-radius:14px; pointer-events:none; }
+.env-back{ background: linear-gradient(var(--brown-dark),#2E1C13); border:2px solid var(--gold); transform: translateZ(-4px);}
+.env-front{ background: linear-gradient(to bottom,var(--brown-mid),var(--brown-dark) 60%,#2E1C13 100%); border:2px solid var(--gold); clip-path: polygon(0 35%,100% 35%,100% 100%,0 100%); transform: translateZ(2px);}
+.env-flap{ clip-path: polygon(0 0,100% 0,50% 62%); background: linear-gradient(#A47551,#6B4226); border:2px solid var(--gold); transform-origin: top center; transform: translateZ(6px); border-radius: 14px 14px 10px 10px/ 14px 14px 20px 20px; box-shadow: 0 8px 16px rgba(0,0,0,.32);}
+.env-ribbon{ position:absolute; left:0; right:0; top: calc(35% - 8px); height:16px; background: linear-gradient(90deg, rgba(212,175,55,.9), rgba(255,255,255,.18) 30%, rgba(212,175,55,.9) 70%, rgba(255,255,255,.18)); border-top:1px solid rgba(255,255,255,.25); border-bottom:1px solid rgba(0,0,0,.4); transform: translateZ(7px); border-radius: 14px/12px; transition: opacity .6s ease, transform .6s ease; }
+.bow{ position:absolute; left:50%; top: calc(35% - 2px); transform: translate(-50%,-50%) translateZ(9px); width: 140px; height: 56px; pointer-events:none;}
+.bow .knot,.bow .loop,.bow .tail{ position:absolute; }
+.bow .knot{ left:50%; top:50%; transform: translate(-50%,-50%); width:22px; height:22px; border-radius:6px; background: radial-gradient(circle at 30% 30%, #e9c36a, #c59a3a 70%, #9a7a2d); }
+.bow .loop{ top:50%; width:56px; height:40px; border-radius:50% 50% 40% 40%; background: radial-gradient(circle at 40% 30%, #f0d98a, #cfa242 70%, #9a7a2d); transition: transform .6s cubic-bezier(.22,.7,.2,1); }
 .bow .loop.left{ left: 50%; transform: translate(-100%,-50%) rotate(-8deg); transform-origin: right center; }
 .bow .loop.right{ left: 50%; transform: translate(0,-50%) rotate(8deg); transform-origin: left center; }
-.bow .tail{ position:absolute; top: calc(50% + 14px); width:18px; height:38px; background: linear-gradient(#e9c36a,#bb8d2f); clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%); box-shadow: 0 3px 6px rgba(0,0,0,.3); }
+.bow .tail{ top: calc(50% + 14px); width:18px; height:38px; background: linear-gradient(#e9c36a,#bb8d2f); clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%); }
 .bow .tail.left{ left: calc(50% - 18px); transform: translate(-100%,-50%) rotate(-6deg); }
 .bow .tail.right{ left: calc(50% + 18px); transform: translate(0,-50%) rotate(6deg); }
-.bow.untie .loop.left{ animation: loopLeft .6s ease forwards; } .bow.untie .loop.right{ animation: loopRight .6s ease forwards; }
-.bow.untie .tail.left{ animation: tailLeft .6s ease forwards; } .bow.untie .tail.right{ animation: tailRight .6s ease forwards; }
-.bow.untie .knot{ animation: knotPop .5s ease forwards .1s; }
-@keyframes loopLeft{ to{ transform: translate(-160%,-70%) rotate(-28deg); opacity:.0 } }
-@keyframes loopRight{ to{ transform: translate(60%,-70%) rotate(28deg); opacity:.0 } }
-@keyframes tailLeft{ to{ transform: translate(-160%,-40%) rotate(-28deg); opacity:.0 } }
-@keyframes tailRight{ to{ transform: translate(60%,-40%) rotate(28deg); opacity:.0 } }
-@keyframes knotPop{ 40%{ transform: translate(-50%,-50%) scale(1.15) } 100%{ transform: translate(-50%,-50%) scale(.7); opacity:0 } }
 
-/* Portrait letter */
-.letter.portrait{
-  width: min(86vw, 480px);
-  height: min(90vh, 760px);
-  position:absolute; left:50%; top: calc(35% + 10px);
-  transform: translate(-50%,0) translateZ(0);
-  opacity:0;
+.stage.shake .envelope3d{ animation:shake .36s }
+@keyframes shake{ 0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)} }
+
+.envelope-open .env-flap{ transform: rotateX(180deg) translateZ(6px); transition: transform 1s ease }
+body.ribbon-loose .env-ribbon{ opacity:0; transform: translateZ(6px) translateY(6px) scaleX(1.06); }
+body.ribbon-loose .bow .loop.left{ transform: translate(-100%,-48%) rotate(-26deg) scaleX(1.05); }
+body.ribbon-loose .bow .loop.right{ transform: translate(0,-48%) rotate(26deg) scaleX(1.05); }
+body.ribbon-loose .bow .tail.left{ transform: translate(-118%,-38%) rotate(-18deg); }
+body.ribbon-loose .bow .tail.right{ transform: translate(18%,-38%) rotate(18deg); }
+
+/* الرسالة */
+.letter{
+  width: min(88vw, 560px); height: min(92vh, 780px);
+  position:fixed; left:50%; top:50%;
+  transform: translate(-50%,-44%) scale(.96);
+  opacity:0; transition: opacity 1s ease, transform 1.1s cubic-bezier(.24,.82,.22,1);
+  z-index:6; pointer-events:none;
 }
+.envelope-open .letter{ opacity:1; transform: translate(-50%,-52%) scale(1); pointer-events:auto; }
 .paper{
-  width:100%; height:100%; background: var(--paper); border: 1px solid var(--gold);
-  box-shadow:0 10px 24px rgba(0,0,0,.35); border-radius: 10px; overflow: hidden; position: relative;
+  width:100%; height:100%; position: relative; border-radius: 18px;
+  background: linear-gradient(145deg, #fff9ea, #f2dfc2);
+  box-shadow: 0 28px 48px rgba(0,0,0,.32), 0 0 0 2px rgba(212,175,55,.25), 0 0 65px rgba(212,175,55,.25);
+  overflow:hidden;
+  padding: calc(18px + var(--sealH) + 18px) 28px 72px;
 }
-.paper::before{
-  content:""; position:absolute; inset:0;
-  background: repeating-linear-gradient( to bottom, rgba(0,0,0,.04) 0, rgba(0,0,0,.04) 1px, transparent 1px, transparent 28px);
-  opacity:.28; pointer-events:none;
-}
-.paper-inner{
-  position:absolute; inset:0; overflow:auto;
-  padding: calc(24px + var(--sealH) + 18px) 24px 80px 24px; /* ↑↑ مساحة فوق الختم */
-  scroll-behavior: smooth;
-}
-.wax-seal.header::after{
-  content:"";
-  position:absolute; inset:-6px;
-  border-radius:50%;
-  border:1px solid rgba(212,175,55,.55);
-  box-shadow: 0 0 12px rgba(212,175,55,.25);
+.message-frame{
+  position:relative; margin: 6px 6px 0 6px;
+  padding: 18px 18px 22px; border-radius: 14px;
+  border:1px solid rgba(212,175,55,.38);
+  box-shadow: inset 0 0 10px rgba(212,175,55,.12);
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(212,175,55,.02));
 }
 
-
-.message.handwrite{
-  font-size: clamp(18px, 3.9vw, 22px);
-  line-height: 2.2;
-  direction: rtl; unicode-bidi: plaintext;
-  color: #1d1408;
-  font-family: "Lateef","Aref Ruqaa","Noto Naskh Arabic","Great Vibes","Cormorant Garamond",serif;
-  white-space: pre-wrap;
-}
-.message.handwrite *{ font-family: inherit; }
-
-.caret{ position:absolute; width:2px; height:1.2em; background:#5b4020; opacity:0; animation: blink 1s step-end infinite; }
-@keyframes blink{ 50%{ opacity:0 } 0%,100%{ opacity:1 } }
-
-/* Wax seal — header */
+/* الختم العلوي */
 .wax-seal.header{
-  position:absolute;
-  width: var(--sealH); height: var(--sealH);
+  position:absolute; width: var(--sealH); height: var(--sealH);
+  left:50%; top: 18px; transform: translate(-50%,0);
   border-radius:50%;
-  left:50%; top: 24px; transform: translate(-50%,0);
-  background: radial-gradient(circle at 35% 35%, #0f3d63, #0b2f4e 60%, #08233a 100%);
-  box-shadow: inset 0 4px 8px rgba(255,255,255,.2), 0 10px 22px rgba(0,0,0,.45);
+  background: radial-gradient(circle at 35% 35%, #6B4226, #2E1C12 68%);
   border: 2px solid rgba(0,0,0,.35);
   display:grid; place-items:center;
-  z-index: 5;              /* ← يضمن أنه فوق الورقة/النص */
-  pointer-events: none;    /* ← ما ياخذ كلك */
+  box-shadow: inset 0 4px 8px rgba(255,255,255,.2), 0 10px 22px rgba(0,0,0,.45);
+  animation: sealPulse 6.4s ease-in-out infinite;
 }
-.seal-svg{ width: 78%; height: 78%; }
-
-
-/* Bottom signature block */
-.signature-block{
-  position: absolute;
-  bottom: 24px;
-  right: 28px;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity .8s ease, transform .8s ease;
+.seal-svg{ width:78%; height:78%; }
+.seal-svg circle{ fill:none; stroke:rgba(212,175,55,.7); stroke-width:2; }
+.seal-svg text{ font-family:"Great Vibes",cursive; font-size:34px; letter-spacing:-2px; fill: rgba(212,175,55,.95); animation: sealTextPulse 6.4s ease-in-out infinite; }
+@keyframes sealPulse{
+  0%,70%{ box-shadow: inset 0 4px 8px rgba(255,255,255,.22), 0 10px 22px rgba(0,0,0,.45), 0 0 10px rgba(212,175,55,.15); }
+  78%{   box-shadow: inset 0 5px 10px rgba(255,255,255,.3), 0 12px 28px rgba(0,0,0,.48), 0 0 22px rgba(212,175,55,.32); }
+  100%{  box-shadow: inset 0 4px 8px rgba(255,255,255,.22), 0 10px 22px rgba(0,0,0,.45), 0 0 10px rgba(212,175,55,.15); }
 }
-body.sig-left .signature-block{ right:auto; left:28px; }
-.signature-block.show{ opacity:1; transform: translateY(0); }
-
-.signature-name{
-  font-family: "Great Vibes","Aref Ruqaa",cursive;
-  font-size: clamp(22px, 4.8vw, 30px);
-  color: #3b2b14;
-  margin-bottom: 8px;
+@keyframes sealTextPulse{
+  0%,72%{ filter: drop-shadow(0 0 6px rgba(212,175,55,.4)); }
+  82%{    filter: drop-shadow(0 0 12px rgba(212,175,55,.75)); }
+  100%{   filter: drop-shadow(0 0 6px rgba(212,175,55,.4)); }
 }
 
-.wax-seal.small{
-  width: 52px; height: 52px; border-radius:50%;
-  background: radial-gradient(circle at 35% 35%, #0f3d63, #0b2f4e 70%);
-  border: 2px solid rgba(0,0,0,.35);
-  box-shadow: inset 0 3px 6px rgba(255,255,255,.25), 0 4px 10px rgba(0,0,0,.3);
-  margin: auto;
+/* النص */
+.message.handwrite{
+  --text-size: 20px; --line: 1.9;
+  font-size: var(--text-size);
+  line-height: var(--line);
+  white-space: pre-wrap;
+  color: var(--ink);
+  text-align: start;
+  direction: rtl;       /* الافتراضي عربي */
+  unicode-bidi: plaintext;
+}
+html[lang="en"] .message.handwrite{ direction:ltr; font-family:"Great Vibes",cursive; }
+html[lang="ar"] .message.handwrite{ direction:rtl;  font-family:"Aref Ruqaa",serif; }
+
+.gold{
+  background: linear-gradient(90deg, #8b6b22, #d4af37, #8b6b22);
+  -webkit-background-clip:text; background-clip:text;
+  color: transparent; text-shadow: 0 0 10px rgba(212,175,55,.25);
 }
 
-.particles{ position:fixed; inset:0; pointer-events:none; z-index:5; }
-.heart{ position:absolute; width:18px; height:18px; transform: rotate(-45deg); opacity:0; background: linear-gradient(135deg, #ff9aa2, #ffd3d6); filter: drop-shadow(0 3px 8px rgba(255, 150, 170, .45)); }
+.caret{
+  display:inline-block; width:2px; height:1.2em; background:#6B4226;
+  animation: blink 1s step-end infinite; vertical-align:bottom; opacity:0;
+}
+@keyframes blink{ 50%{opacity:0} }
+
+/* التوقيع */
+.signature-block{ position: absolute; bottom: 20px; right: 26px; text-align:center; }
+.signature-name{ font-family:"Great Vibes","Aref Ruqaa",cursive; font-size: clamp(22px, 4.8vw, 30px); color: #4B2E2A; }
+
+/* زر الإغلاق */
+.btn-close{
+  position:absolute; right:16px; top:18px; width:28px; height:28px; line-height:26px;
+  border-radius:8px; text-align:center; cursor:pointer; user-select:none; color:#4a321a;
+  font-weight:700; font-size:18px; background: linear-gradient(145deg, #f5dfb3, #cea242 68%, #b48432 100%);
+  border:1px solid rgba(212,175,55,.65); box-shadow: inset 0 2px 3px rgba(255,255,255,.45), 0 4px 12px rgba(58,40,24,.38);
+}
+
+/* القلوب */
+.hearts{ position:fixed; inset:0; pointer-events:none; z-index:7; }
+.heart{
+  position:fixed; width:18px; height:18px; transform: rotate(-45deg); opacity:0;
+  background: linear-gradient(135deg, #d4af37, #ff9aa2);
+  filter: drop-shadow(0 4px 10px rgba(212,175,55,.34)) drop-shadow(0 0 8px rgba(255,154,162,.28));
+  animation: floatUp 5.2s linear forwards;
+}
 .heart::before,.heart::after{ content:""; position:absolute; width:18px; height:18px; background:inherit; border-radius:50%; }
 .heart::before{ top:-9px; left:0; } .heart::after{ top:0; left:9px; }
+@keyframes floatUp{
+  0%{ transform: translateY(0) scale(.8) rotate(-45deg); opacity:.95; }
+  80%{ opacity:.9; }
+  100%{ transform: translateY(-240px) scale(1.24) rotate(-45deg); opacity:0; }
+}
 
-/* States */
-.stage.shake .envelope3d{ animation:shake calc(.35s * var(--speed)) }
-@keyframes shake{ 0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)} }
-.envelope-open .env-flap{ transform: rotateX(180deg) translateZ(6px); transition: transform calc(1s * var(--speed)) ease }
-.envelope-open .letter{ opacity:1; transform: translate(-50%,-6px) }
-.envelope-retreat .envelope3d{ transform: translateZ(-120px) scale(.97); filter: blur(.4px) drop-shadow(0 10px 16px rgba(0,0,0,.28)); opacity:.9 }
+/* نافذة التعليمات */
+.notice{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(24,12,8,.72); backdrop-filter: blur(2px); z-index: 20; }
+.notice.show{ display:flex; }
+.notice-box{ width:min(560px, 88vw); background: linear-gradient(180deg, rgba(75,46,42,.94), rgba(212,175,55,.9)); border:1px solid rgba(212,175,55,.65); border-radius:16px; box-shadow: 0 20px 46px rgba(0,0,0,.55), 0 0 30px rgba(212,175,55,.28); overflow:hidden; font-family:"Aref Ruqaa",serif; color:#fdf0d6; position:relative; }
+.notice-header{ display:flex; align-items:center; justify-content:space-between; padding:18px 22px; background: linear-gradient(180deg, rgba(94,61,48,.9), rgba(212,175,55,.4)); }
+.notice-title{ font-weight:800; font-size: clamp(20px, 3.6vw, 26px); color:#fff4dd; letter-spacing:1px; }
+.notice-close{ border:none; background:transparent; font-size:22px; cursor:pointer; color:#f8ead0; }
+.notice.locked .notice-close{ opacity:.35; pointer-events:none; }
+.notice-text{ padding:22px 26px 10px; font-size: clamp(16px, 3vw, 18px); line-height:1.9; color:#fdf6e8; white-space: pre-wrap; direction: rtl; text-align: start; }
+.notice-actions{ display:flex; justify-content:center; padding:18px 0 26px; }
+.notice-ok{ width:78px; height:78px; border-radius:50%; border:2px solid rgba(212,175,55,.65); background: radial-gradient(circle at 40% 32%, #f8deb0, #d0a242 68%, #8e6530 100%); color:#3f2914; font-weight:600; font-size:18px; letter-spacing:.6px; cursor:pointer; box-shadow: inset 0 4px 7px rgba(255,255,255,.45), 0 12px 22px rgba(0,0,0,.45), 0 0 20px rgba(212,175,55,.45); }
 
-.letter-reveal .message{ opacity:1; transform:none; transition: opacity calc(.5s * var(--speed)) ease .1s, transform calc(.5s * var(--speed)) ease .1s }
-
-@media (max-width:420px){
-  :root{ --envW: 90vw; --speed: .65; }
-  .message.handwrite{ font-size: clamp(18px, 5vw, 22px); }
+/* ريسبونسف */
+@media (max-width: 600px){
+  :root{ --envW: 86vw; }
+  .message.handwrite{ --text-size: 18px; --line: 1.85; }
+  .paper{ padding: calc(14px + var(--sealH) + 14px) 18px 64px; }
 }
