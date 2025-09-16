@@ -1,151 +1,264 @@
-(function(){
+document.addEventListener('DOMContentLoaded', () => {
   const stage = document.querySelector('.stage');
   const envelope = document.getElementById('envelope');
-  const particles = document.getElementById('particles');
-  const waxSeal = document.getElementById('waxSeal'); // header seal
-  const bow = document.getElementById('bow');
+  const letter = document.getElementById('letter');
+  const closeBtn = document.getElementById('closeBtn');
   const message = document.getElementById('message');
   const caret = document.getElementById('caret');
-  const monoText = document.getElementById('monoText');
-  const monoTextSmall = document.getElementById('monoTextSmall');
-  const signatureBlock = document.getElementById('signatureBlock');
+  const langToggle = document.getElementById('langToggle');
   const signatureName = document.getElementById('signatureName');
+  const hearts = document.getElementById('hearts');
+  const tplAr = document.getElementById('tpl-ar');
+  const tplEn = document.getElementById('tpl-en');
+  const rulesBtn = document.getElementById('rulesBtn');
+  const notice = document.getElementById('notice');
+  const noticeTitle = document.getElementById('noticeTitle');
+  const noticeText = document.getElementById('noticeText');
+  const noticeOk = document.getElementById('noticeOk');
+  const noticeClose = document.getElementById('noticeClose');
+  const tplNoticeAr = document.getElementById('tpl-notice-ar');
+  const body = document.body;
 
-  // === CONFIG ===
-  const MONOGRAM = 'Y ♥ S';   // غيّره مثلاً إلى 'ي ♥ ن'
-  const SIGN_NAME = 'يونس كمال'; // غيّر اسم التوقيع
-  if(monoText) monoText.textContent = MONOGRAM;
-  if(monoTextSmall) monoTextSmall.textContent = MONOGRAM;
-  if(signatureName) signatureName.textContent = SIGN_NAME;
+  // Override notice template content with your message
+  if(tplNoticeAr){
+    tplNoticeAr.innerHTML = `هلا تبوشتي شلونج عمري؟ 🌹
+كلش هواية مشتاقلج , اعرف يمكن ما تحبين الرسائل 
+بس حتى تبقالنا بصمه من الذكرى ما تنمحي يمكن من نكبر
+او بيوم من الايام نفتحها
+أتمنى من تفتحين كل ظرف، تشغّلين الأغنية وياها، وتكونين وحدج ومركّزة
+ حتى تحسين بكل كلمة.
+الظروف مرقّمة من الواحد بالترتيب، يعني قصة صغيرة نعيشها سوا خطوة بخطوة.
+وكل رسالة حاولت اخلي  بيها كل من تبارك و يونس، 
+ولا تنسين… آخر ظرف مو مرقّم، وما بي ورقة… بس بي شغلة صغيرة تنتظرج 😉
+افتحيه وجرّبيها،لتنسين الفلوك ! ✨
+اخر شي و اهم شي اكلج :
+غير عينونچ أني شعندي! 🎵❤️`;
+  }
 
-  let clicks = 0;
-  let sequenceStarted = false;
+  let clickCount = 0;
+  const requiredClicks = 3;
+  let currentLang = 'ar';
 
-  const SPEED = 0.70;
-  const t = (ms)=> Math.round(ms * SPEED);
+  // ===== Helpers
+  let noticeLocked = true;
+  let noticeTypingTimer = null;
+  function showNotice(){
+    if(!notice) return;
+    notice.classList.add('show');
+    notice.classList.toggle('locked', !!noticeLocked);
+    notice.setAttribute('aria-hidden','false');
+    startNoticeTyping();
+  }
+  function hideNotice(){
+    if(!notice) return;
+    clearTimeout(noticeTypingTimer);
+    notice.classList.remove('show');
+    notice.classList.remove('locked');
+    notice.setAttribute('aria-hidden','true');
+  }
 
-  // Hearts
-  function heartsBurst(count=9){
-    const rect = envelope.getBoundingClientRect();
-    for(let i=0;i<count;i++){
-      const h = document.createElement('span');
-      h.className = 'heart';
-      const x = rect.left + rect.width/2 + (Math.random()-0.5) * rect.width * 0.6;
-      const y = rect.top + rect.height*0.55 + (Math.random()-0.5) * rect.height * 0.2;
-      h.style.left = x+'px'; h.style.top = y+'px';
-      const size = 14 + Math.random()*10; h.style.width = size+'px'; h.style.height = size+'px';
-      particles.appendChild(h);
-      const dx = (Math.random()-0.5) * 160;
-      const dy = - (90 + Math.random() * 160);
-      const dur = t(900 + Math.random()*900);
-      h.animate([{ transform:'translate(0,0) rotate(-45deg)', opacity:0 },{ opacity:1, offset:.2 },{ transform:`translate(${dx}px, ${dy}px) rotate(-45deg)`, opacity:0 }], { duration: dur, easing:'cubic-bezier(.2,.7,.2,1)' }).onfinish = ()=> h.remove();
+  // Type the notice text (Arabic only)
+  function startNoticeTyping(){
+    if(!noticeText) return;
+    clearTimeout(noticeTypingTimer);
+    const raw = (tplNoticeAr?.innerHTML || '').trim()
+      .replace(/\r?\n\s*\r?\n/g, '<br><br>')
+      .replace(/\r?\n/g, '<br>');
+    const tokens = tokenize(raw);
+    noticeText.innerHTML = '';
+    const caretEl = document.createElement('span');
+    caretEl.className = 'caret';
+    caretEl.style.opacity = 1;
+    let i = 0;
+    function step(){
+      if(i < tokens.length){
+        noticeText.insertAdjacentHTML('beforeend', tokens[i]);
+        i++;
+        // keep caret at end
+        noticeText.appendChild(caretEl);
+        const t = tokens[i-1];
+        const slow = /[،؛؟,.!]/.test(t) || t === '<br>' ? 110 : 0;
+        const base = 30;
+        const jitter = Math.random()*28;
+        noticeTypingTimer = setTimeout(step, base + slow + jitter);
+      }else{
+        caretEl.style.opacity = 0;
+      }
+    }
+    // place caret and start
+    noticeText.appendChild(caretEl);
+    noticeTypingTimer = setTimeout(step, 420);
+  }
+
+  // Parse HTML string into tokens (tags vs chars) so typing doesn't break tags.
+  function tokenize(html){
+    const tokens = [];
+    let i = 0;
+    while(i < html.length){
+      if(html[i] === '<'){
+        let j = i;
+        while(j < html.length && html[j] !== '>') j++;
+        tokens.push(html.slice(i, j+1));
+        i = j + 1;
+      }else{
+        tokens.push(html[i]);
+        i++;
+      }
+    }
+    return tokens;
+  }
+
+  function setLanguage(lang){
+    currentLang = (lang === 'en') ? 'en' : 'ar';
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir  = currentLang === 'ar' ? 'rtl' : 'ltr';
+    langToggle.textContent = currentLang === 'ar' ? 'AR | EN' : 'EN | AR';
+    signatureName.textContent = currentLang === 'ar' ? (body.dataset.nameAr || 'يونس كمال') : (body.dataset.nameEn || 'Younus Kamal');
+    // restart typing with the selected language if letter open
+    if(stage.classList.contains('envelope-open')){
+      startTyping();
     }
   }
-  function jitter(){ stage.classList.add('shake'); setTimeout(()=> stage.classList.remove('shake'), t(320)); }
 
-  function untieBow(){ if(!bow || bow.classList.contains('untie')) return; bow.classList.add('untie'); setTimeout(()=> bow.remove(), t(700)); }
-
-  // Sounds (simple)
-  let audioCtx;
-  function initAudio(){ if(!audioCtx){ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } }
-  function playSealCrack(){
-    if(!audioCtx) return; const dur = 0.16; const sr = audioCtx.sampleRate;
-    const buffer = audioCtx.createBuffer(1, sr * dur, sr); const data = buffer.getChannelData(0);
-    for(let i=0;i<data.length;i++){ const tt=i/sr; let v=0; if(i<360) v+=(Math.random()*2-1)*(1-i/360); if(i>1000&&i<1180) v+=(Math.random()*2-1)*(1-(i-1000)/180); v += (Math.random()*2-1)*Math.exp(-22*tt)*0.22; data[i]=v*0.9; }
-    const src = audioCtx.createBufferSource(); src.buffer=buffer; const hp = audioCtx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=1400; hp.Q.value=0.7; src.connect(hp).connect(audioCtx.destination); src.start();
-  }
-  function playPaperRustle(){
-    if(!audioCtx) return; const dur=0.42; const sr=audioCtx.sampleRate; const buffer=audioCtx.createBuffer(1,sr*dur,sr); const data=buffer.getChannelData(0);
-    for(let i=0;i<data.length;i++){ const tt=i/sr; const env = Math.exp(-7*tt) * (0.4 + 0.6*Math.max(0, Math.sin(36*tt))); data[i]=(Math.random()*2-1)*env*0.58; }
-    const src=audioCtx.createBufferSource(); src.buffer=buffer; const bp=audioCtx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2000; bp.Q.value=0.9; src.connect(bp).connect(audioCtx.destination); src.start();
-  }
-
-  function breakSeal(){
-    // optional visual if أردت لاحقًا
-  }
-
-  function openSequence(){
-    if(sequenceStarted) return; sequenceStarted = true;
-    initAudio(); playSealCrack(); breakSeal();
-    setTimeout(()=>{
-      document.body.classList.add('envelope-open');
-      setTimeout(()=>{ playPaperRustle(); }, t(220));
-      setTimeout(()=>{
-        document.body.classList.add('envelope-retreat');
-        setTimeout(()=>{ startWriting(); }, t(700));
-      }, t(700));
-    }, t(180));
-  }
-
-  // === Full page handwriting ===
-  const content = message?.dataset?.content || '';
-  let idx = 0;
-  function placeCaret(){
-    const range = document.createRange();
-    const sel = window.getSelection();
-    const last = message.lastChild;
-    if(last && last.nodeType === Node.TEXT_NODE){
-      range.setStart(last, last.textContent.length);
-    }else{
-      range.selectNodeContents(message);
-      range.collapse(false);
-    }
-    const rects = range.getClientRects();
-    let rect;
-    if(rects.length){
-      rect = rects[rects.length-1];
-    }else{
-      const mrect = message.getBoundingClientRect();
-      rect = {left:mrect.left+8, top:mrect.top+8, height:18};
-    }
-    const parentRect = message.closest('.paper-inner').getBoundingClientRect();
-    caret.style.left = (rect.left - parentRect.left) + 'px';
-    caret.style.top  = (rect.top - parentRect.top) + 'px';
+  // Typing with tokens (HTML-safe)
+  let typingTimer = null;
+  function startTyping(){
+    clearTimeout(typingTimer);
     caret.style.opacity = 1;
-  }
-  function writeStep(){
-    if(idx >= content.length){
-      caret.style.opacity = 0;
-      // Show bottom signature + seal
-      setTimeout(()=>{ signatureBlock.classList.add('show'); }, t(600));
-      return;
+    const text = (currentLang === 'ar' ? tplAr.textContent : tplEn.textContent).trim()
+      // convert line breaks in templates to <br> for consistent spacing
+      .replace(/\r?\n\r?\n/g, '<br><br>')
+      .replace(/\r?\n/g, '<br>');
+
+    const tokens = tokenize(text);
+    message.innerHTML = '';
+    let i = 0;
+
+    function step(){
+      if(i < tokens.length){
+        message.innerHTML += tokens[i];
+        i++;
+        const t = tokens[i-1];
+        // Slow down a bit after punctuation or line breaks
+        const slow = /[،,.!?]/.test(t) || t === '<br>' ? 90 : 0;
+        const base = 26;
+        const jitter = Math.random()*22;
+        typingTimer = setTimeout(step, base + slow + jitter);
+      }else{
+        caret.style.opacity = 0;
+      }
     }
-    const ch = content[idx++];
-    // Switch dir automatically
-    if(/[\u0600-\u06FF]/.test(ch)){ message.setAttribute('dir','rtl'); }
-    else if(/[A-Za-z]/.test(ch)){ message.setAttribute('dir','ltr'); }
-    message.append(document.createTextNode(ch));
-    placeCaret();
-    const container = document.querySelector('.paper-inner');
-    container.scrollTop = container.scrollHeight;
-    const base = 40;
-    const slowChars = '،.،.?!…—- ';
-    const delay = slowChars.includes(ch) ? base*2.4 : base * (0.8 + Math.random()*0.6);
-    setTimeout(writeStep, t(delay));
-  }
-  function startWriting(){
-    message.textContent=''; idx=0; caret.style.opacity = 1; writeStep();
+    typingTimer = setTimeout(step, 380);
   }
 
-  // Click logic
-  envelope.addEventListener('click', ()=>{
-    if(sequenceStarted) return; initAudio();
-    clicks++;
-    if(clicks === 1){ jitter(); heartsBurst(9); }
-    else if(clicks === 2){ jitter(); heartsBurst(12); untieBow(); }
-    else if(clicks >= 3){ heartsBurst(16); openSequence(); }
-  });
+  // Ensure typing works reliably with template HTML (preserves <span class="gold"> etc.)
+  const _startTypingOriginal = startTyping;
+  startTyping = function(){
+    clearTimeout(typingTimer);
+    caret.style.opacity = 1;
+    const raw = (currentLang === 'ar' ? tplAr?.innerHTML : tplEn?.innerHTML) || '';
+    const text = raw.trim()
+      .replace(/\r?\n\s*\r?\n/g, '<br><br>')
+      .replace(/\r?\n/g, '<br>');
 
-  // Expand tap area near envelope
-  document.addEventListener('click', (e)=>{
-    if(sequenceStarted) return;
-    if(e.target.closest && e.target.closest('#envelope')) return;
+    const tokens = tokenize(text);
+    message.innerHTML = '';
+    let i = 0;
+    function step(){
+      if(i < tokens.length){
+        message.insertAdjacentHTML('beforeend', tokens[i]);
+        i++;
+        const t = tokens[i-1];
+        const slow = /[،؛؟,.!]/.test(t) || t === '<br>' ? 90 : 0;
+        const base = 26;
+        const jitter = Math.random()*22;
+        typingTimer = setTimeout(step, base + slow + jitter);
+      }else{
+        caret.style.opacity = 0;
+      }
+    }
+    typingTimer = setTimeout(step, 380);
+  }
+
+  // Hearts from envelope (click-only)
+  function spawnHeart(){
     const rect = envelope.getBoundingClientRect();
-    const x = e.clientX, y = e.clientY;
-    if(x > rect.left-12 && x < rect.right+12 && y > rect.top-12 && y < rect.bottom+12){
-      envelope.click();
-    }
-  }, {passive:true});
+    const x = rect.left + rect.width/2 + (Math.random()*40 - 20);
+    const y = rect.top + rect.height*0.65 + (Math.random()*8 - 4);
 
-  envelope.addEventListener('touchstart', ()=>{}, {passive:true});
-})();
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.style.left = `${x}px`;
+    h.style.top  = `${y}px`;
+    h.style.animationDuration = `${4.5 + Math.random()*2.2}s`;
+    hearts.appendChild(h);
+    setTimeout(()=> h.remove(), 6000);
+  }
+  function emitHeartsBurst(count = 6){
+    const n = Math.max(1, count|0);
+    for(let i=0;i<n;i++){
+      // stagger a bit for a natural burst
+      setTimeout(spawnHeart, i*100 + Math.random()*80);
+    }
+  }
+
+  // Envelope interactions
+  if(envelope){
+    envelope.addEventListener('click', () => {
+      // hearts only on user click
+      emitHeartsBurst(5 + Math.floor(Math.random()*4));
+
+      if(!stage.classList.contains('envelope-open')){
+        clickCount++;
+        if(clickCount < requiredClicks){
+          stage.classList.add('shake');
+          setTimeout(()=> stage.classList.remove('shake'), 360);
+        }else{
+          stage.classList.add('envelope-open');
+          body.classList.add('ribbon-loose');
+          letter.setAttribute('aria-hidden','false');
+          startTyping();
+        }
+      }
+    });
+  }
+
+  if(closeBtn){
+    closeBtn.addEventListener('click', () => {
+      stage.classList.remove('envelope-open','shake');
+      body.classList.remove('ribbon-loose');
+      letter.setAttribute('aria-hidden','true');
+      clickCount = 0;
+      clearTimeout(typingTimer);
+      message.innerHTML = '';
+      caret.style.opacity = 0;
+    });
+  }
+
+  if(langToggle){
+    langToggle.addEventListener('click', () => {
+      setLanguage(currentLang === 'ar' ? 'en' : 'ar');
+    });
+  }
+
+  if(rulesBtn){
+    // Arabic labels for consistency
+    try{ rulesBtn.textContent = 'رسالتي'; }catch{}
+    rulesBtn.addEventListener('click', () => { noticeLocked = false; showNotice(); });
+  }
+  if(noticeTitle){ try{ noticeTitle.textContent = 'رسالتي'; }catch{} }
+  if(noticeOk){
+    try{ noticeOk.textContent = 'ابدأ'; }catch{}
+    noticeOk.addEventListener('click', () => { noticeLocked = false; hideNotice(); });
+  }
+  if(noticeClose){ noticeClose.addEventListener('click', () => { if(!noticeLocked) hideNotice(); }); }
+  if(notice){ notice.addEventListener('click', (e)=> { if(e.target === notice && !noticeLocked) hideNotice(); }); }
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !noticeLocked) hideNotice(); });
+
+  // Init
+  setLanguage('ar');
+  noticeLocked = true;
+  setTimeout(showNotice, 300);
+});
+
+
