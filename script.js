@@ -48,7 +48,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if(best < 14) line = 1.7; else if(best < 16) line = 1.75; else if(best < 20) line = 1.82; else if(best < 22) line = 1.86;
     messageFrame.style.setProperty('--line', String(line));
 
-    // No downscaling per request – keep writing size as-is
+    // iOS-only fallback: small scale to ensure full fit on tiny screens
+    if(isIOS){
+      const avail2 = messageFrame.clientHeight;
+      const h2 = message.scrollHeight;
+      if(h2 > avail2){
+        const s = Math.max(0.9, Math.min(1, avail2 / h2));
+        message.style.transform = `scale(${s})`;
+        if(caret) caret.style.transform = `scale(${s})`;
+      }
+    }
   }
   function queueFit(){
     if(fitQueued) return; fitQueued = true;
@@ -230,11 +239,13 @@ document.addEventListener('DOMContentLoaded', () => {
     hearts.appendChild(h);
     setTimeout(()=> h.remove(), 6000);
   }
+  const isIOS = /iP(hone|od|ad)|Macintosh.*Mobile/.test(navigator.userAgent);
   function emitHeartsBurst(count = 6){
-    const n = Math.max(1, count|0);
+    const target = isIOS ? Math.min(4, count) : count;
+    const n = Math.max(1, target|0);
     for(let i=0;i<n;i++){
       // stagger a bit for a natural burst
-      setTimeout(spawnHeart, i*100 + Math.random()*80);
+      setTimeout(spawnHeart, i*110 + Math.random()*90);
     }
   }
 
@@ -302,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const r = stage.getBoundingClientRect();
     const dx = (e.clientX - (r.left + r.width/2)) / (r.width/2);
     const dy = (e.clientY - (r.top + r.height/2)) / (r.height/2);
-    const maxRX = 8, maxRY = 12;
+    const maxRX = isIOS ? 6 : 8, maxRY = isIOS ? 9 : 12;
     const rx = Math.max(-maxRX, Math.min(maxRX, -dy * maxRX));
     const ry = Math.max(-maxRY, Math.min(maxRY, dx * maxRY));
     envelope.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
