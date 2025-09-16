@@ -24,24 +24,24 @@
 }
 
 /* الرسائل */
-html[lang="ar"] .message.handwrite {
-  font-family: "Aref Ruqaa", serif;
-  direction: rtl;
-  /* Arabic shaping + rendering */
-  font-feature-settings: "ccmp" 1, "rlig" 1, "calt" 1, "liga" 1, "kern" 1;
-  font-variant-ligatures: common-ligatures contextual;
+/* النصوص العربية */
+html[lang="ar"] .message.handwrite,
+html[lang="ar"] .signature-name,
+.notice-text {
+  font-family: "Lateef", serif;
+  font-weight: 400;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "calt" 1, "liga" 1, "kern" 1;
 }
 
-/* الخط الإنكليزي يبقى من Google */
-html[lang="en"] .message.handwrite {
+/* النصوص الإنجليزية */
+html[lang="en"] .message.handwrite,
+html[lang="en"] .signature-name {
   font-family: "Great Vibes", cursive;
-  direction: ltr;
-  /* Default a bit larger script size via var */
-  --text-size: 22px;
+  font-weight: 400;
 }
-/* Signature font follows page language */
-html[lang="ar"] .signature-name { font-family: "Aref Ruqaa", serif; }
-html[lang="en"] .signature-name { font-family: "Great Vibes", cursive; }
 
 /* التوقيع */
 .signature-name {
