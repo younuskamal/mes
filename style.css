@@ -9,26 +9,39 @@
   --envH:calc(var(--envW)*0.66);
   --sealH:clamp(54px, 8vw, 74px);
 }
+/* الخط العربي */
 @font-face {
   font-family: "Aref Ruqaa";
   src: url("font/ArefRuqaa-Regular.woff2") format("woff2");
   font-weight: 400;
-  font-style: normal;
 }
-
 @font-face {
   font-family: "Aref Ruqaa";
   src: url("font/ArefRuqaa-Bold.woff2") format("woff2");
   font-weight: 700;
-  font-style: normal;
 }
 
+/* الرسائل */
 html[lang="ar"] .message.handwrite {
-  direction: rtl;
   font-family: "Aref Ruqaa", serif;
-  font-weight: 400;
   font-size: 20px;
   line-height: 1.9;
+  direction: rtl;
+}
+
+/* الخط الإنكليزي يبقى من Google */
+html[lang="en"] .message.handwrite {
+  font-family: "Great Vibes", cursive;
+  font-size: 22px;
+  line-height: 1.9;
+  direction: ltr;
+}
+
+/* التوقيع */
+.signature-name {
+  font-family: "Great Vibes", "Aref Ruqaa", cursive;
+  font-size: clamp(22px, 4.8vw, 30px);
+  color: #4B2E2A;
 }
 
 *{box-sizing:border-box}
