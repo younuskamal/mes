@@ -14,11 +14,13 @@
   font-family: "Aref Ruqaa";
   src: url("font/ArefRuqaa-Regular.woff2") format("woff2");
   font-weight: 400;
+  font-display: swap;
 }
 @font-face {
   font-family: "Aref Ruqaa";
   src: url("font/ArefRuqaa-Bold.woff2") format("woff2");
   font-weight: 700;
+  font-display: swap;
 }
 
 /* الرسائل */
@@ -27,6 +29,9 @@ html[lang="ar"] .message.handwrite {
   font-size: 20px;
   line-height: 1.9;
   direction: rtl;
+  overflow-wrap: break-word;
+  word-break: normal;
+  letter-spacing: normal;
 }
 
 /* الخط الإنكليزي يبقى من Google */
@@ -35,7 +40,13 @@ html[lang="en"] .message.handwrite {
   font-size: 22px;
   line-height: 1.9;
   direction: ltr;
+  overflow-wrap: break-word;
+  word-break: normal;
+  letter-spacing: normal;
 }
+/* Signature font follows page language */
+html[lang="ar"] .signature-name { font-family: "Aref Ruqaa", serif; }
+html[lang="en"] .signature-name { font-family: "Great Vibes", cursive; }
 
 /* التوقيع */
 .signature-name {
@@ -54,6 +65,11 @@ body{
     linear-gradient(0deg, rgba(40,56,40,.12), rgba(40,56,40,.05));
   background-attachment: fixed;
   overflow:hidden;
+  /* iOS text quality */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
 }
 
 .top-actions{
@@ -113,6 +129,10 @@ body.ribbon-loose .bow .tail.right{ transform: translate(18%,-38%) rotate(18deg)
   transform: translate(-50%,-44%) scale(.96);
   opacity:0; transition: opacity 1s ease, transform 1.1s cubic-bezier(.24,.82,.22,1);
   z-index:6; pointer-events:none;
+}
+.letter{ /* iOS small-viewport units for better fit */ }
+@supports (height: 1svh){
+  .letter{ height: min(92svh, 780px); }
 }
 .envelope-open .letter{ opacity:1; transform: translate(-50%,-52%) scale(1); pointer-events:auto; }
 .paper{
@@ -208,6 +228,11 @@ body.ribbon-loose .bow .tail.right{ transform: translate(18%,-38%) rotate(18deg)
   overflow-wrap: anywhere; word-break: break-word; hyphens: auto;
   direction: rtl;       /* الافتراضي عربي */
   unicode-bidi: plaintext;
+  /* iOS/Safari text refinement */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: normal; word-spacing: normal; font-kerning: normal;
 }
 html[lang="en"] .message.handwrite{ direction:ltr; font-family:"Great Vibes",cursive; }
 html[lang="ar"] .message.handwrite{ direction:rtl;  font-family:"Aref Ruqaa",serif; }
@@ -248,7 +273,7 @@ html[lang="en"] .message.handwrite::first-letter{
 .heart{
   position:fixed; width:18px; height:18px; transform: rotate(-45deg); opacity:0;
   background: linear-gradient(135deg, #d4af37, #ff9aa2);
-  filter: drop-shadow(0 4px 10px rgba(212,175,55,.34)) drop-shadow(0 0 8px rgba(255,154,162,.28));
+  filter: drop-shadow(0 3px 8px rgba(212,175,55,.28)) drop-shadow(0 0 6px rgba(255,154,162,.22));
   animation: floatUp 5.2s linear forwards;
 }
 .heart::before,.heart::after{ content:""; position:absolute; width:18px; height:18px; background:inherit; border-radius:50%; }
@@ -257,6 +282,14 @@ html[lang="en"] .message.handwrite::first-letter{
   0%{ transform: translateY(0) scale(.8) rotate(-45deg); opacity:.95; }
   80%{ opacity:.9; }
   100%{ transform: translateY(-240px) scale(1.24) rotate(-45deg); opacity:0; }
+}
+
+@media (max-width: 600px){
+  .heart{ animation-duration: 4.2s; }
+}
+@media (prefers-reduced-motion: reduce){
+  .heart{ animation: none !important; opacity:.7; }
+  .stage.shake .envelope3d{ animation: none !important; }
 }
 
 /* نافذة التعليمات */
@@ -276,8 +309,8 @@ html[lang="en"] .message.handwrite::first-letter{
 /* ريسبونسف */
 @media (max-width: 600px){
   :root{ --envW: 86vw; }
-  .message.handwrite{ --text-size: 18px; --line: 1.85; }
-  .paper{ padding: calc(14px + var(--sealH) + 14px) 18px 64px; }
+  .message.handwrite{ --text-size: 20px; --line: 1.8; }
+  .paper{ padding: calc(18px + var(--sealH) + 16px) 20px 72px; }
   .message-frame::before,.message-frame::after{ font-size:16px; }
 }
 
@@ -330,4 +363,3 @@ html[lang="ar"] .message.handwrite {
   font-size: 20px;
   line-height: 1.9;
 }
-
