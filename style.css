@@ -9,6 +9,19 @@
   --envH:calc(var(--envW)*0.66);
   --sealH:clamp(54px, 8vw, 74px);
 }
+@font-face {
+  font-family: "Aref Ruqaa";
+  src: url("font/ArefRuqaa-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Aref Ruqaa";
+  src: url("font/ArefRuqaa-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
 
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -284,7 +297,7 @@ html[lang="en"] .message.handwrite::first-letter{
   }
 
   .paper{
-    padding: calc(var(--padT) + var(--sealH) + 30px)   /* 🔥 نزّل النص أكثر عن الختم */
+    padding: calc(var(--padT) + var(--sealH) + 10px)   /* 🔥 نزّل النص أكثر عن الختم */
              calc(var(--padX) - 2px) 
              calc(var(--padB) + var(--sigH) - 4px);
     border-radius: 14px; /* زوايا أخف على الموبايل */
@@ -292,9 +305,9 @@ html[lang="en"] .message.handwrite::first-letter{
 }
 html[lang="ar"] .message.handwrite {
   direction: rtl;
-  font-family: "Aref Ruqaa", "Amiri", "Scheherazade New", "Lateef", "Traditional Arabic", "Tahoma", serif;
+  font-family: "Aref Ruqaa", serif;
+  font-weight: 400;
   font-size: 20px;
   line-height: 1.9;
 }
-
 
