@@ -18,22 +18,58 @@ document.addEventListener('DOMContentLoaded', () => {
   const noticeClose = document.getElementById('noticeClose');
   const tplNoticeAr = document.getElementById('tpl-notice-ar');
   const body = document.body;
+  const messageFrame = document.querySelector('.message-frame');
+
+  // === Dynamic fit: keep text fully visible without scrollbars
+  let fitQueued = false;
+  function computeFit(){
+    if(!message || !messageFrame) return;
+    // Reset transforms before measuring
+    message.style.transform = '';
+    if(caret) caret.style.transform = '';
+
+    const avail = messageFrame.clientHeight;
+    if(avail <= 0) return;
+
+    // Binary search upward only (never shrink): keep base size
+    const base = parseFloat(getComputedStyle(message).fontSize) || 20;
+    let min = base, max = base + (window.innerWidth < 420 ? 2 : 4);
+    let best = base;
+    for(let i=0;i<8;i++){
+      const mid = (min + max) / 2;
+      messageFrame.style.setProperty('--text-size', mid + 'px');
+      const h = message.scrollHeight; // layout flush
+      if(h <= avail){ best = mid; min = mid; } else { max = mid; }
+    }
+    messageFrame.style.setProperty('--text-size', (Math.floor(best*100)/100) + 'px');
+
+    // Tune line-height for readability based on size
+    let line = 1.9;
+    if(best < 14) line = 1.7; else if(best < 16) line = 1.75; else if(best < 20) line = 1.82; else if(best < 22) line = 1.86;
+    messageFrame.style.setProperty('--line', String(line));
+
+    // No downscaling per request – keep writing size as-is
+  }
+  function queueFit(){
+    if(fitQueued) return; fitQueued = true;
+    requestAnimationFrame(()=>{ fitQueued = false; computeFit(); });
+  }
 
   // Override notice template content with your message
   if(tplNoticeAr){
     tplNoticeAr.innerHTML = `هلا تبوشتي شلونج عمري؟ 🌹
 كلش هواية مشتاقلج , اعرف يمكن ما تحبين الرسائل 
-بس حتى تبقالنا بصمه من الذكرى ما تنمحي يمكن من نكبر
-او بيوم من الايام نفتحها
-أتمنى من تفتحين كل ظرف، تشغّلين الأغنية وياها، وتكونين وحدج ومركّزة
- حتى تحسين بكل كلمة.
-الظروف مرقّمة من الواحد بالترتيب، يعني قصة صغيرة نعيشها سوا خطوة بخطوة.
+بس حتى تبقالنا بصمه من الذكرى ما تنمحي يمكن حتى من نكبر
+او بيوم من الايام نفتحها سويه و نشوفها و نسولف بيها
+أتمنى من تفتحين كل ظرف، تشغّلين الأغنية وياها،
+ وتكونين وحدج ومركّزة حتى تحسين بكل كلمة.
+الظروف مرقّمة من الواحد بالترتيب ، يعني قصة صغيرة نعيشها سوا خطوة بخطوة.
 وكل رسالة حاولت اخلي  بيها كل من تبارك و يونس، 
 ولا تنسين… آخر ظرف مو مرقّم، وما بي ورقة… بس بي شغلة صغيرة تنتظرج 😉
 افتحيه وجرّبيها،لتنسين الفلوك ! ✨
 اخر شي و اهم شي اكلج :
 غير عينونچ أني شعندي! 🎵❤️`;
-  }
+}
 
   let clickCount = 0;
   const requiredClicks = 3;
@@ -113,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.lang = currentLang;
     document.documentElement.dir  = currentLang === 'ar' ? 'rtl' : 'ltr';
     langToggle.textContent = currentLang === 'ar' ? 'AR | EN' : 'EN | AR';
-    signatureName.textContent = currentLang === 'ar' ? (body.dataset.nameAr || 'يونس كمال') : (body.dataset.nameEn || 'Younus Kamal');
+    signatureName.textContent = currentLang === 'ar' ? (body.dataset.nameAr || 'يونس كمال') : (body.dataset.nameEn || 'Yunus Kamal');
     // restart typing with the selected language if letter open
     if(stage.classList.contains('envelope-open')){
       startTyping();
@@ -217,7 +253,9 @@ document.addEventListener('DOMContentLoaded', () => {
           stage.classList.add('envelope-open');
           body.classList.add('ribbon-loose');
           letter.setAttribute('aria-hidden','false');
+          tiltEnabled = false; if(envelope) envelope.style.transform='';
           startTyping();
+          setTimeout(queueFit, 60);
         }
       }
     });
@@ -232,12 +270,14 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(typingTimer);
       message.innerHTML = '';
       caret.style.opacity = 0;
+      tiltEnabled = true; if(envelope) envelope.style.transform='';
     });
   }
 
   if(langToggle){
     langToggle.addEventListener('click', () => {
       setLanguage(currentLang === 'ar' ? 'en' : 'ar');
+      queueFit();
     });
   }
 
@@ -255,10 +295,39 @@ document.addEventListener('DOMContentLoaded', () => {
   if(notice){ notice.addEventListener('click', (e)=> { if(e.target === notice && !noticeLocked) hideNotice(); }); }
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !noticeLocked) hideNotice(); });
 
+  // Interactivity: subtle envelope parallax tilt
+  let tiltEnabled = true;
+  function applyTilt(e){
+    if(!tiltEnabled || !envelope || !stage) return;
+    const r = stage.getBoundingClientRect();
+    const dx = (e.clientX - (r.left + r.width/2)) / (r.width/2);
+    const dy = (e.clientY - (r.top + r.height/2)) / (r.height/2);
+    const maxRX = 8, maxRY = 12;
+    const rx = Math.max(-maxRX, Math.min(maxRX, -dy * maxRX));
+    const ry = Math.max(-maxRY, Math.min(maxRY, dx * maxRY));
+    envelope.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+  }
+  if(stage){
+    stage.addEventListener('mousemove', applyTilt);
+    stage.addEventListener('mouseleave', ()=>{ if(envelope) envelope.style.transform=''; });
+  }
+
+  // Refit on resize and when content changes
+  window.addEventListener('resize', queueFit);
+  try{
+    const ro = new ResizeObserver(()=> queueFit());
+    if(messageFrame) ro.observe(messageFrame);
+    if(message) ro.observe(message);
+  }catch{}
+  try{
+    const mo = new MutationObserver(()=> queueFit());
+    if(message) mo.observe(message, { childList:true, subtree:true, characterData:true });
+  }catch{}
+
   // Init
-  setLanguage('ar');
+  setLanguage('en');
   noticeLocked = true;
   setTimeout(showNotice, 300);
+  // Initial fit pass (in case content is pre-filled)
+  setTimeout(queueFit, 120);
 });
-
-
