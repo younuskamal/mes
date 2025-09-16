@@ -26,23 +26,18 @@
 /* الرسائل */
 html[lang="ar"] .message.handwrite {
   font-family: "Aref Ruqaa", serif;
-  font-size: 20px;
-  line-height: 1.9;
   direction: rtl;
-  overflow-wrap: break-word;
-  word-break: normal;
-  letter-spacing: normal;
+  /* Arabic shaping + rendering */
+  font-feature-settings: "ccmp" 1, "rlig" 1, "calt" 1, "liga" 1, "kern" 1;
+  font-variant-ligatures: common-ligatures contextual;
 }
 
 /* الخط الإنكليزي يبقى من Google */
 html[lang="en"] .message.handwrite {
   font-family: "Great Vibes", cursive;
-  font-size: 22px;
-  line-height: 1.9;
   direction: ltr;
-  overflow-wrap: break-word;
-  word-break: normal;
-  letter-spacing: normal;
+  /* Default a bit larger script size via var */
+  --text-size: 22px;
 }
 /* Signature font follows page language */
 html[lang="ar"] .signature-name { font-family: "Aref Ruqaa", serif; }
@@ -50,7 +45,6 @@ html[lang="en"] .signature-name { font-family: "Great Vibes", cursive; }
 
 /* التوقيع */
 .signature-name {
-  font-family: "Great Vibes", "Aref Ruqaa", cursive;
   font-size: clamp(22px, 4.8vw, 30px);
   color: #4B2E2A;
 }
@@ -300,7 +294,7 @@ html[lang="en"] .message.handwrite::first-letter{
 .notice-title{ font-weight:800; font-size: clamp(20px, 3.6vw, 26px); color:#fff4dd; letter-spacing:1px; }
 .notice-close{ border:none; background:transparent; font-size:22px; cursor:pointer; color:#f8ead0; }
 .notice.locked .notice-close{ opacity:.35; pointer-events:none; }
-.notice-text{ padding:22px 26px 10px; font-size: clamp(16px, 3vw, 18px); line-height:1.9; color:#fdf6e8; white-space: pre-wrap; direction: rtl; text-align: start; max-height: min(62vh, 520px); overflow:auto; -webkit-overflow-scrolling: touch; }
+.notice-text{ padding:22px 26px 10px; font-size: clamp(16px, 3vw, 18px); line-height:1.9; color:#fdf6e8; white-space: pre-wrap; direction: rtl; text-align: start; max-height: min(62vh, 520px); overflow:auto; -webkit-overflow-scrolling: touch; font-family: "Aref Ruqaa", serif; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-feature-settings: "ccmp" 1, "rlig" 1, "calt" 1, "liga" 1, "kern" 1; letter-spacing: normal; word-break: normal; overflow-wrap: break-word; }
 .notice-text{ scrollbar-width: none; }
 .notice-text::-webkit-scrollbar{ width:0; height:0; }
 .notice-actions{ display:flex; justify-content:center; padding:18px 0 26px; }
@@ -322,7 +316,7 @@ html[lang="en"] .message.handwrite::first-letter{
 /* Page spacing & signature reserve */
 :root{
   --padX: clamp(18px, 3.2vw, 28px);
-  --padT: clamp(16px, 2.8vh, 22px);
+  --padT: clamp(22px, 4vh, 28px);
   --padB: clamp(24px, 4.6vh, 32px);
   --sigH: clamp(56px, 10vh, 90px);
 }
