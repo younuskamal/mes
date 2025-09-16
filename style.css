@@ -290,4 +290,11 @@ html[lang="en"] .message.handwrite::first-letter{
     border-radius: 14px; /* زوايا أخف على الموبايل */
   }
 }
+html[lang="ar"] .message.handwrite {
+  direction: rtl;
+  font-family: "Aref Ruqaa", "Amiri", "Scheherazade New", "Lateef", "Traditional Arabic", "Tahoma", serif;
+  font-size: 20px;
+  line-height: 1.9;
+}
+
 
