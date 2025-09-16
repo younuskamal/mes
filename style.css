@@ -11,16 +11,24 @@
 }
 @font-face {
   font-family: "Aref Ruqaa";
-  src: url("font/ArefRuqaa-Regular.ttf") format("truetype");
+  src: url("font/ArefRuqaa-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Aref Ruqaa";
-  src: url("font/ArefRuqaa-Bold.ttf") format("truetype");
+  src: url("font/ArefRuqaa-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
+}
+
+html[lang="ar"] .message.handwrite {
+  direction: rtl;
+  font-family: "Aref Ruqaa", serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.9;
 }
 
 *{box-sizing:border-box}
@@ -305,8 +313,7 @@ html[lang="en"] .message.handwrite::first-letter{
 }
 html[lang="ar"] .message.handwrite {
   direction: rtl;
-  font-family: "Aref Ruqaa", serif;
-  font-weight: 400;
+  font-family: "Aref Ruqaa", "Amiri", "Scheherazade New", "Lateef", "Traditional Arabic", "Tahoma", serif;
   font-size: 20px;
   line-height: 1.9;
 }
