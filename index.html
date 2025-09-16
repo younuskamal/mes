@@ -2,24 +2,34 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>رسالتي</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Classic Love Letter</title>
+
+  <!-- خطوط -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Fonts: Arabic handwriting & Latin Victorian -->
-  <link href="https://fonts.googleapis.com/css2?family=Lateef:wght@400;600&family=Aref+Ruqaa:wght@400;700&family=Great+Vibes&family=Cormorant+Garamond:wght@600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa&family=Great+Vibes&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' data:; media-src 'self' data:; script-src 'self' 'unsafe-inline'">
 </head>
-<body class="sig-left"><!-- بدّل إلى sig-left لو تريد الختم يسار -->
-  <main class="stage" aria-label="رسالة تفاعلية">
-    <button class="envelope3d" id="envelope" aria-label="اضغط 3 مرات لفتح الظرف">
-      <span class="env env-back" aria-hidden="true"></span>
-      <span class="letter-slot" aria-hidden="true"></span>
-      <span class="env env-front" aria-hidden="true"></span>
-      <span class="env env-flap" aria-hidden="true"></span>
-      <span class="env-ribbon" aria-hidden="true"></span>
-      <span class="env-ornaments" aria-hidden="true"></span>
-      <span class="bow" id="bow" aria-hidden="true">
+<body data-name-en="Younus Kamal" data-name-ar="يونس كمال">
+
+  <main class="stage" aria-label="Letter Stage">
+
+    <!-- أزرار -->
+    <div class="top-actions">
+      <button id="rulesBtn" class="btn btn-gold" type="button">التعليمات</button>
+      <button id="langToggle" class="btn btn-gold" type="button" aria-pressed="true">AR | EN</button>
+    </div>
+
+    <!-- الظرف 3D -->
+    <button id="envelope" class="envelope3d" type="button" aria-label="افتح الظرف">
+      <span class="env env-back"></span>
+      <span class="env env-front"></span>
+      <span class="env env-flap"></span>
+      <span class="env-ribbon"></span>
+      <span class="bow">
         <span class="loop left"></span>
         <span class="loop right"></span>
         <span class="tail left"></span>
@@ -28,58 +38,103 @@
       </span>
     </button>
 
-    <!-- Portrait letter -->
-    <section class="letter portrait" id="letter" aria-live="polite">
+    <!-- الرسالة -->
+    <section id="letter" class="letter" aria-hidden="true">
       <div class="paper">
-        <div class="paper-inner">
-          <!-- Wax seal header (top decorative) -->
-          <div class="wax-seal header" id="waxSeal" aria-hidden="true">
-            <svg class="seal-svg" viewBox="0 0 100 100" aria-hidden="true">
-              <defs>
-                <filter id="bevel" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="blur"/>
-                  <feSpecularLighting in="blur" surfaceScale="5" specularConstant=".9" specularExponent="20" lighting-color="#f5d97a" result="spec">
-                    <fePointLight x="-60" y="-40" z="150"/>
-                  </feSpecularLighting>
-                  <feComposite in="spec" in2="SourceAlpha" operator="in" result="specOut"/>
-                  <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
-                </filter>
-              </defs>
-              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,215,0,.6)" stroke-width="2"/>
-              <text id="monoText" x="50" y="58" text-anchor="middle" font-size="30" font-family="Cormorant Garamond, serif" fill="rgba(255,215,0,.92)" filter="url(#bevel)">Y</text>
-            </svg>
-          </div>
+        <button id="closeBtn" class="btn-close" type="button" aria-label="إغلاق">&times;</button>
 
-          <!-- Writing area fills the page -->
-          <article class="message handwrite" id="message"
-                   aria-label="نص الرسالة"
-                   data-content="يا من سكنت الفؤاد، 
-أكتبُ إليكِ على مَهَلٍ كأن القلمَ ريشةُ طائرٍ تمرُّ فوقَ صفحةِ سماء. 
-كلُّ نبضةٍ تُنشد اسمكِ بالعربية — and sometimes in English — 
-to say that Love speaks in every language we share.
-أعدكِ بأن أبقى سندًا، ودفئًا في البرد، ونورًا حين تتعب الدروب.
-Let this letter be a keepsake of our moments; a gentle vow, written by a steady heart.
-بقلبٍ مُحبّ — إلى الأبد."></article>
+        <!-- ختم علوي فقط -->
+        <div class="wax-seal header" aria-hidden="true">
+          <svg class="seal-svg" viewBox="0 0 100 100" role="presentation">
+            <circle cx="50" cy="50" r="42"></circle>
+            <text x="50" y="58" text-anchor="middle">YT</text>
+          </svg>
+        </div>
 
-          <!-- caret -->
+        <div class="message-frame">
+          <article id="message" class="message handwrite" aria-live="polite"></article>
           <span id="caret" class="caret" aria-hidden="true"></span>
+        </div>
 
-          <!-- Bottom signature + small seal (hidden until writing ends) -->
-          <div class="signature-block" id="signatureBlock" aria-hidden="true">
-            <div class="signature-name" id="signatureName">يونس كمال</div>
-            <div class="wax-seal small" id="finalSeal" aria-hidden="true">
-              <svg class="seal-svg" viewBox="0 0 100 100" aria-hidden="true">
-                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,215,0,.55)" stroke-width="2"/>
-                <text id="monoTextSmall" x="50" y="58" text-anchor="middle" font-size="28" font-family="Cormorant Garamond, serif" fill="rgba(255,215,0,.9)">Y ♥ S</text>
-              </svg>
-            </div>
-          </div>
+        <!-- التوقيع (اسم فقط) -->
+        <div class="signature-block">
+          <div id="signatureName" class="signature-name">يونس كمال</div>
         </div>
       </div>
     </section>
 
-    <div class="particles" id="particles" aria-hidden="true"></div>
+    <!-- قلوب تطلع من الظرف -->
+    <div id="hearts" class="hearts" aria-hidden="true"></div>
+
   </main>
+
+  <!-- نافذة التعليمات (عربي دائمًا) -->
+  <div id="notice" class="notice" role="dialog" aria-modal="true" aria-labelledby="noticeTitle" aria-hidden="true">
+    <div class="notice-box">
+      <div class="notice-header">
+        <div id="noticeTitle" class="notice-title">رسالتي</div>
+        <button id="noticeClose" class="notice-close" type="button" aria-label="إغلاق">&times;</button>
+      </div>
+      <div id="noticeText" class="notice-text">
+       هلا تبوشتي شلونج عمري؟ 🌹
+كلش هواية مشتاقلج , اعرف يمكن ما تحبين الرسائل 
+بس حتى تبقالنا بصمه من الذكرى ما تنمحي يمكن من نكبر
+او بيوم من الايام نفتحها
+أتمنى من تفتحين كل ظرف، تشغّلين الأغنية وياها، وتكونين وحدج ومركّزة
+ حتى تحسين بكل كلمة.
+الظروف مرقّمة من الواحد بالترتيب، يعني قصة صغيرة نعيشها سوا خطوة بخطوة.
+وكل رسالة حاولت اخلي  بيها كل من تبارك و يونس، 
+ولا تنسين… آخر ظرف مو مرقّم، وما بي ورقة… بس بي شغلة صغيرة تنتظرج 😉
+افتحيه وجرّبيها،لتنسين الفلوك ! ✨
+اخر شي و اهم شي اكلج :
+غير عينونچ أني شعندي! 🎵❤️
+      </div>
+      <div class="notice-actions">
+        <button id="noticeOk" class="notice-ok" type="button">ابدأ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- قوالب النص -->
+  <template id="tpl-ar"><span class="gold">إلى من تملكين وقتي، يا وحيدتي، يا أرقّ وأجمل أميرات الكون،</span>
+هذه الرسالة ليست كلمات عابرة، بل ساعة رملية انقلبت،
+تعلن بداية طريق جديد بيننا.
+مع كل حرفٍ يُفتح، تسقطُ حبّةُ رمل،
+فتكشف سرّاً خبّأه قلبٌ لا يعرفُ سوى انتظارك.
+
+هنا ستجد ظلَّ ذكرياتٍ لا تغيب،
+وصدى ضحكاتٍ يملأ الصمت،
+ولحظاتٍ منقوشةٍ كالجواهر في صدرِ أيامي.
+
+وتذكّر تلك اللحظة الأولى التي جمعتنا:
+لم تكن ذكرى عابرة،
+بل مفتاحاً لما سيأتي،
+وخيطَ بدايةٍ لا يكتملُ إلا بيديْك.</template>
+
+  <template id="tpl-en"><span class="gold">To the one who owns my time,</span>
+this message is not mere words, but an hourglass turned upside down,
+announcing the beginning of a new path between us.
+With every letter you open, a grain of sand falls,
+revealing a secret kept by a heart that only waits for you.
+
+Here you'll find the shadow of memories that never fade,
+the echo of laughter filling the silence,
+and moments engraved like jewels in the chest of my days.
+
+Remember the first moment that brought us together:
+it was never fleeting,
+but the key to what will come,
+the thread of beginning only your hands complete.</template>
+
+  
+  <template id="tpl-notice-ar"><span class="gold">مرحباً بك</span>،
+هذه رسالتي لك.
+قبل أن تفتح الظرف:
+• اضغط الظرف ثلاث مرات ليفتح.
+• يمكنك تبديل اللغة من أعلى الصفحة.
+• عند النقر على الظرف تتطاير القلوب.
+
+عندما تكون جاهزاً اضغط زر «ابدأ» أدناه.</template>
 
   <script src="script.js"></script>
 </body>
