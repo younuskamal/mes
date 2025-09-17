@@ -172,34 +172,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Typing with tokens (HTML-safe)
   let typingTimer = null;
-  function startTyping(){
-    clearTimeout(typingTimer);
-    caret.style.opacity = 1;
-    const text = (currentLang === 'ar' ? tplAr.textContent : tplEn.textContent).trim()
-      // convert line breaks in templates to <br> for consistent spacing
-      .replace(/\r?\n\r?\n/g, '<br><br>')
-      .replace(/\r?\n/g, '<br>');
+function startTyping(){
+  clearTimeout(typingTimer);
+  caret.style.opacity = 1;
 
-    const tokens = tokenize(text);
-    message.innerHTML = '';
-    let i = 0;
+  const raw = (currentLang === 'ar' ? tplAr?.innerHTML : tplEn?.innerHTML) || '';
+  const text = raw.trim()
+    .replace(/\r?\n\s*\r?\n/g, '<br><br>')
+    .replace(/\r?\n/g, '<br>');
 
-    function step(){
-      if(i < tokens.length){
-        message.innerHTML += tokens[i];
-        i++;
-        const t = tokens[i-1];
-        // Slow down a bit after punctuation or line breaks
-        const slow = /[،,.!?]/.test(t) || t === '<br>' ? 90 : 0;
-        const base = 26;
-        const jitter = Math.random()*22;
-        typingTimer = setTimeout(step, base + slow + jitter);
-      }else{
-        caret.style.opacity = 0;
-      }
+  const tokens = tokenize(text);
+  message.innerHTML = '';
+  let i = 0;
+
+  function step(){
+    if(i < tokens.length){
+      message.insertAdjacentHTML('beforeend', tokens[i]);
+      i++;
+      const t = tokens[i-1];
+      const slow = /[،؛؟,.!]/.test(t) || t === '<br>' ? 90 : 0;
+      const base = 26;
+      const jitter = Math.random()*22;
+      typingTimer = setTimeout(step, base + slow + jitter);
+    }else{
+      caret.style.opacity = 0;
     }
-    typingTimer = setTimeout(step, 380);
   }
+  typingTimer = setTimeout(step, 380);
+}
+
 
   // Ensure typing works reliably with template HTML (preserves <span class="gold"> etc.)
   const _startTypingOriginal = startTyping;
