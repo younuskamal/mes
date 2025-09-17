@@ -176,21 +176,19 @@ function startTyping(){
   clearTimeout(typingTimer);
   caret.style.opacity = 1;
 
-  const raw = (currentLang === 'ar' ? tplAr?.innerHTML : tplEn?.innerHTML) || '';
-  const text = raw.trim()
-    .replace(/\r?\n\s*\r?\n/g, '<br><br>')
-    .replace(/\r?\n/g, '<br>');
+  // اختار النص
+  const raw = (currentLang === 'ar' ? tplAr?.textContent : tplEn?.textContent) || '';
+  const text = raw.trim();
 
-  const tokens = tokenize(text);
-  message.innerHTML = '';
+  message.textContent = ''; // reset
   let i = 0;
 
   function step(){
-    if(i < tokens.length){
-      message.insertAdjacentHTML('beforeend', tokens[i]);
+    if(i < text.length){
+      message.textContent += text[i];
       i++;
-      const t = tokens[i-1];
-      const slow = /[،؛؟,.!]/.test(t) || t === '<br>' ? 90 : 0;
+      const t = text[i-1];
+      const slow = /[،؛؟,.!]/.test(t) || t === '\n' ? 90 : 0;
       const base = 26;
       const jitter = Math.random()*22;
       typingTimer = setTimeout(step, base + slow + jitter);
@@ -200,6 +198,7 @@ function startTyping(){
   }
   typingTimer = setTimeout(step, 380);
 }
+
 
 
   // Ensure typing works reliably with template HTML (preserves <span class="gold"> etc.)
