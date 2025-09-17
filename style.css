@@ -15,19 +15,18 @@
 /* ==================== الخطوط ==================== */
 
 /* الخطوط العربية (ستاندر) */
-/* الخطوط العربية (iOS compatible) */
+/* الخطوط العربية (توافق كامل iOS) */
 html[lang="ar"] .message.handwrite,
 html[lang="ar"] .signature-name,
 html[lang="ar"] .btn,
 html[lang="ar"] .notice-title,
 html[lang="ar"] .notice-text {
   font-family:
-    -apple-system, /* خط النظام الأساسي على iOS */
-    BlinkMacSystemFont, 
-    "Segoe UI", 
+    "SF Arabic",         /* iOS 16+ */
+    "PingFang Arabic",   /* بعض نسخ iOS */
+    "Geeza Pro",         /* fallback مضمون */
     "Tahoma",
     "Arial",
-    "Helvetica Neue",
     sans-serif;
 }
 
