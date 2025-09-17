@@ -14,7 +14,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap');
 html[lang="ar"] body {
-  font-family: "Noto Naskh Arabic", "Geeza Pro", "Arial", sans-serif;
+  font-family:"Aref Ruqaa",serif;
 }
 
 
@@ -24,7 +24,7 @@ html[lang="en"] .message.handwrite {
   font-family: "Great Vibes", cursive;
 }
 html[lang="ar"] .message.handwrite {
-  font-family: "SF Arabic", "Geeza Pro", "Tahoma", "Arial", sans-serif !important;
+  font-family:"Aref Ruqaa",serif;
   direction: rtl;
   font-size: 16px;
   line-height: 1.9;
@@ -33,7 +33,7 @@ html[lang="ar"] body,
 html[lang="ar"] .message.handwrite,
 html[lang="ar"] .notice-text,
 html[lang="ar"] .signature-name {
-  font-family: -apple-system, "SF Arabic", "Geeza Pro", "Tahoma", "Arial", sans-serif !important;
+  font-family:"Aref Ruqaa",serif;
   direction: rtl;
 }
 
@@ -67,7 +67,7 @@ html, body { height:100%; }
 body {
   margin:0;
   color:var(--ink);
-  font-family:"Noto Naskh Arabic","Geeza Pro","Arial",sans-serif;
+  font-family:"Aref Ruqaa",serif;
   background:
     radial-gradient(1100px 780px at 40% -10%, #6B4226 0%, #4B2E2A 45%, #2E1C12 100%),
     linear-gradient(0deg, rgba(40,56,40,.12), rgba(40,56,40,.05));
@@ -403,7 +403,7 @@ body.ribbon-loose .bow .tail.right { transform: translate(18%,-38%) rotate(18deg
   direction: rtl;        /* الافتراضي عربي */
   unicode-bidi: plaintext;
   text-indent: 1.4em;
-  font-family: "Noto Naskh Arabic","Geeza Pro","Arial",sans-serif;
+  font-family:"Aref Ruqaa",serif;
 }
 
 html[lang="en"] .message.handwrite {
@@ -413,7 +413,7 @@ html[lang="en"] .message.handwrite {
 
 html[lang="ar"] .message.handwrite {
   direction:rtl;
-  font-family:"Noto Naskh Arabic","Geeza Pro","Arial",sans-serif;
+  font-family:"Aref Ruqaa",serif;
 }
 
 /* Drop cap للإنكليزي */
@@ -530,7 +530,7 @@ html[lang="en"] .message.handwrite::first-letter {
     0 20px 46px rgba(0,0,0,.55),
     0 0 30px rgba(212,175,55,.28);
   overflow:hidden;
-  font-family:"Noto Naskh Arabic","Geeza Pro","Arial",sans-serif;
+  font-family:"Aref Ruqaa",serif;
   color:#fdf0d6;
   position:relative;
 }
@@ -651,3 +651,4 @@ html[lang="en"] .message.handwrite::first-letter {
     border-radius: 14px;
   }
 }
+
