@@ -23,6 +23,13 @@ html[lang="ar"] body {
 html[lang="en"] .message.handwrite {
   font-family: "Great Vibes", cursive;
 }
+html[lang="ar"] body,
+html[lang="ar"] .message.handwrite,
+html[lang="ar"] .notice-title,
+html[lang="ar"] .notice-text,
+html[lang="ar"] .signature-name {
+  font-family: "SF Arabic", "Geeza Pro", "Tahoma", "Arial", sans-serif !important;
+}
 
 /* رسالة البداية */
 html[lang="ar"] .notice-title,
