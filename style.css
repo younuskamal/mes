@@ -12,23 +12,11 @@
   --padB: clamp(28px, 5vh, 36px);
 }
 
-/* ==================== الخطوط ==================== */
-
-/* الخطوط العربية (ستاندر) */
-/* الخطوط العربية (توافق كامل iOS) */
-html[lang="ar"] .message.handwrite,
-html[lang="ar"] .signature-name,
-html[lang="ar"] .btn,
-html[lang="ar"] .notice-title,
-html[lang="ar"] .notice-text {
-  font-family:
-    "SF Arabic",         /* iOS 16+ */
-    "PingFang Arabic",   /* بعض نسخ iOS */
-    "Geeza Pro",         /* fallback مضمون */
-    "Tahoma",
-    "Arial",
-    sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap');
+html[lang="ar"] body {
+  font-family: "Noto Naskh Arabic", "Geeza Pro", "Arial", sans-serif;
 }
+
 
 /* خط إنكليزي (Great Vibes) */
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
