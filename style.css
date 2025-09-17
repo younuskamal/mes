@@ -29,13 +29,12 @@ html[lang="ar"] .message.handwrite {
   font-size: 16px;
   line-height: 1.9;
 }
-
 html[lang="ar"] body,
 html[lang="ar"] .message.handwrite,
-html[lang="ar"] .notice-title,
 html[lang="ar"] .notice-text,
 html[lang="ar"] .signature-name {
-  font-family: "SF Arabic", "Geeza Pro", "Tahoma", "Arial", sans-serif !important;
+  font-family: -apple-system, "SF Arabic", "Geeza Pro", "Tahoma", "Arial", sans-serif !important;
+  direction: rtl;
 }
 
 /* رسالة البداية */
