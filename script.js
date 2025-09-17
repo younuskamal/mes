@@ -19,6 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const tplNoticeAr = document.getElementById('tpl-notice-ar');
   const body = document.body;
   const messageFrame = document.querySelector('.message-frame');
+  // Detect iOS and tag <html>, then inject Lateef font only on iOS
+  const isIOS = /iP(hone|od|ad)|Macintosh.*Mobile/.test(navigator.userAgent);
+  document.documentElement.classList.toggle('ios', isIOS);
+  if(isIOS){
+    const href = 'https://fonts.googleapis.com/css2?family=Lateef&display=swap';
+    if(!document.querySelector('link[data-ios-font="lateef"]')){
+      const l = document.createElement('link');
+      l.rel = 'stylesheet'; l.href = href; l.setAttribute('data-ios-font','lateef');
+      document.head.appendChild(l);
+    }
+  }
 
   // === Dynamic fit: keep text fully visible without scrollbars
   let fitQueued = false;
@@ -66,14 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Override notice template content with your message
   if(tplNoticeAr){
-    tplNoticeAr.innerHTML = `هلا تبوشتي شلونج عمري؟ 🌹
-كلش هواية مشتاقلج , اعرف يمكن ما تحبين الرسائل 
-بس حتى تبقالنا بصمه من الذكرى ما تنمحي يمكن حتى من نكبر
-او بيوم من الايام نفتحها سويه و نشوفها و نسولف بيها
-أتمنى من تفتحين كل ظرف، تشغّلين الأغنية وياها،
- وتكونين وحدج ومركّزة حتى تحسين بكل كلمة.
-الظروف مرقّمة من الواحد بالترتيب ، يعني قصة صغيرة نعيشها سوا خطوة بخطوة.
-وكل رسالة حاولت اخلي  بيها كل من تبارك و يونس، 
+    tplNoticeAr.innerHTML = `هلا تبوشتي شلونج عمري؟🌹كلش هواية مشتاقلج , اعرف يمكن ما تحبين الرسائل بس حتى تبقالنا بصمه من الذكرى ما تنمحي يمكن حتى من نكبر او بيوم من الايام نفتحها سويه و نشوفها و نسولف بيها أتمنى من تفتحين كل ظرف، تشغّلين الأغنية وياها،وتكونين وحدج ومركّزة حتى تحسين بكل كلمة.
+الظروف مرقّمة من الواحد بالترتيب ، يعني قصة صغيرة نعيشها سوا خطوة بخطوة. وكل رسالة حاولت اخلي  بيها كل من تبارك و يونس، 
 ولا تنسين… آخر ظرف مو مرقّم، وما بي ورقة… بس بي شغلة صغيرة تنتظرج 😉
 افتحيه وجرّبيها،لتنسين الفلوك ! ✨
 اخر شي و اهم شي اكلج :
@@ -239,7 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
     hearts.appendChild(h);
     setTimeout(()=> h.remove(), 6000);
   }
-  const isIOS = /iP(hone|od|ad)|Macintosh.*Mobile/.test(navigator.userAgent);
   function emitHeartsBurst(count = 6){
     const target = isIOS ? Math.min(4, count) : count;
     const n = Math.max(1, target|0);
