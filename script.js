@@ -19,17 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const tplNoticeAr = document.getElementById('tpl-notice-ar');
   const body = document.body;
   const messageFrame = document.querySelector('.message-frame');
-  // Detect iOS and tag <html>, then inject Lateef font only on iOS
+  // iOS detection (for minor perf tweaks only; no font injection)
   const isIOS = /iP(hone|od|ad)|Macintosh.*Mobile/.test(navigator.userAgent);
-  document.documentElement.classList.toggle('ios', isIOS);
-  if(isIOS){
-    const href = 'https://fonts.googleapis.com/css2?family=Lateef&display=swap';
-    if(!document.querySelector('link[data-ios-font="lateef"]')){
-      const l = document.createElement('link');
-      l.rel = 'stylesheet'; l.href = href; l.setAttribute('data-ios-font','lateef');
-      document.head.appendChild(l);
-    }
-  }
 
   // === Dynamic fit: keep text fully visible without scrollbars
   let fitQueued = false;
@@ -110,34 +101,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Type the notice text (Arabic only)
   function startNoticeTyping(){
     if(!noticeText) return;
+    // For Arabic notice: render instantly (no typing) to avoid shaping issues
     clearTimeout(noticeTypingTimer);
     const raw = (tplNoticeAr?.innerHTML || '').trim()
       .replace(/\r?\n\s*\r?\n/g, '<br><br>')
       .replace(/\r?\n/g, '<br>');
-    const tokens = tokenize(raw);
-    noticeText.innerHTML = '';
-    const caretEl = document.createElement('span');
-    caretEl.className = 'caret';
-    caretEl.style.opacity = 1;
-    let i = 0;
-    function step(){
-      if(i < tokens.length){
-        noticeText.insertAdjacentHTML('beforeend', tokens[i]);
-        i++;
-        // keep caret at end
-        noticeText.appendChild(caretEl);
-        const t = tokens[i-1];
-        const slow = /[،؛؟,.!]/.test(t) || t === '<br>' ? 110 : 0;
-        const base = 30;
-        const jitter = Math.random()*28;
-        noticeTypingTimer = setTimeout(step, base + slow + jitter);
-      }else{
-        caretEl.style.opacity = 0;
-      }
-    }
-    // place caret and start
-    noticeText.appendChild(caretEl);
-    noticeTypingTimer = setTimeout(step, 420);
+    noticeText.innerHTML = raw;
   }
 
   // Parse HTML string into tokens (tags vs chars) so typing doesn't break tags.
@@ -205,6 +174,17 @@ function startTyping(){
   const _startTypingOriginal = startTyping;
   startTyping = function(){
     clearTimeout(typingTimer);
+    // Arabic: show all at once (no typing effect)
+    if(currentLang === 'ar'){
+      caret.style.opacity = 0;
+      const raw = (tplAr?.innerHTML || '').trim()
+        .replace(/\r?\n\s*\r?\n/g, '<br><br>')
+        .replace(/\r?\n/g, '<br>');
+      message.innerHTML = raw;
+      queueFit();
+      return;
+    }
+    // English: keep typing effect
     caret.style.opacity = 1;
     const raw = (currentLang === 'ar' ? tplAr?.innerHTML : tplEn?.innerHTML) || '';
     const text = raw.trim()
