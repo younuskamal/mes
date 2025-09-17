@@ -14,74 +14,65 @@
 
 /* ==================== الخطوط ==================== */
 
-/* الخطوط العربية */
+/* الخطوط العربية (ستاندر) */
 html[lang="ar"] .message.handwrite,
 html[lang="ar"] .signature-name,
 html[lang="ar"] .btn,
 html[lang="ar"] .notice-title,
 html[lang="ar"] .notice-text {
-  font-family: "Lateef", "Scheherazade New", "Amiri", serif;
+  font-family: "Tahoma", "Arial", "Helvetica", sans-serif;
 }
 
-/* استيراد الخط الإنكليزي (Great Vibes) من Google */
+/* خط إنكليزي (Great Vibes) */
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
-
-/* رسالة البداية (نافذة التعليمات) */
-html[lang="ar"] .notice-title,
-html[lang="ar"] .notice-text {
-  font-family: "Amiri", "Scheherazade New", serif;
-  font-size: 14px;       /* حجم أوضح */
-  line-height: 2;        /* مسافة أسطر مريحة */
-  direction: rtl;
-  text-align: justify;   /* توزيع النص */
-}
-
-/* نص الرسائل */
-html[lang="ar"] .message.handwrite {
-  font-family: "Scheherazade New", serif;
-  font-size: 16px;
-  line-height: 1.9;
-  direction: rtl;
-}
-
-/* النصوص الإنجليزية */
 html[lang="en"] .message.handwrite {
   font-family: "Great Vibes", cursive;
+}
+
+/* رسالة البداية */
+html[lang="ar"] .notice-title,
+html[lang="ar"] .notice-text {
+  font-size: 14px;
+  line-height: 2;
+  direction: rtl;
+  text-align: justify;
+}
+
+/* نصوص الرسائل */
+html[lang="ar"] .message.handwrite {
   font-size: 16px;
   line-height: 1.9;
-  direction: ltr;
+  direction: rtl;
 }
 
 /* التوقيع */
 .signature-name {
-  font-family: "Great Vibes", "Lateef", serif;
+  font-family: "Great Vibes", "Tahoma", "Arial", sans-serif;
   font-size: clamp(22px, 4.8vw, 30px);
   color: #4B2E2A;
 }
 
 /* ==================== البنية الأساسية ==================== */
-
 * { box-sizing:border-box; }
 html, body { height:100%; }
 
 body {
   margin:0;
   color:var(--ink);
-  font-family:"Lateef","Great Vibes",serif;
+  font-family:"Tahoma","Arial",sans-serif;
   background:
     radial-gradient(1100px 780px at 40% -10%, #6B4226 0%, #4B2E2A 45%, #2E1C12 100%),
     linear-gradient(0deg, rgba(40,56,40,.12), rgba(40,56,40,.05));
   background-attachment: fixed;
   overflow:hidden;
 
-  /* تحسين عرض النصوص في iOS */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   -webkit-text-size-adjust: 100%;
 }
 
-/* أزرار أعلى الصفحة */
+/* ==================== الأزرار ==================== */
 .top-actions {
   position:fixed;
   inset:14px 14px auto auto;
@@ -89,7 +80,6 @@ body {
   display:flex;
   gap:10px;
 }
-
 .btn {
   border:none;
   cursor:pointer;
@@ -99,7 +89,6 @@ body {
   border-radius:10px;
   font-size:14px;
 }
-
 .btn-gold {
   color:#2a1c12;
   background: linear-gradient(145deg, #f5dfb3, #cea242 68%, #b48432 100%);
@@ -109,7 +98,7 @@ body {
 }
 .btn-gold:active { transform: scale(.98); }
 
-/* الحاوية العامة */
+/* ==================== الحاوية العامة ==================== */
 .stage {
   width:100%;
   height:100%;
@@ -165,8 +154,7 @@ body {
 
 .env-ribbon {
   position:absolute;
-  left:0;
-  right:0;
+  left:0; right:0;
   top: calc(35% - 8px);
   height:16px;
   background: linear-gradient(90deg, rgba(212,175,55,.9), rgba(255,255,255,.18) 30%, rgba(212,175,55,.9) 70%, rgba(255,255,255,.18));
@@ -188,9 +176,7 @@ body {
 }
 .bow .knot,
 .bow .loop,
-.bow .tail {
-  position:absolute;
-}
+.bow .tail { position:absolute; }
 .bow .knot {
   left:50%; top:50%;
   transform: translate(-50%,-50%);
@@ -249,6 +235,7 @@ body.ribbon-loose .bow .loop.left { transform: translate(-100%,-48%) rotate(-26d
 body.ribbon-loose .bow .loop.right { transform: translate(0,-48%) rotate(26deg) scaleX(1.05); }
 body.ribbon-loose .bow .tail.left { transform: translate(-118%,-38%) rotate(-18deg); }
 body.ribbon-loose .bow .tail.right { transform: translate(18%,-38%) rotate(18deg); }
+
 /* ==================== الرسالة ==================== */
 .letter {
   width: min(88vw, 560px);
@@ -257,8 +244,7 @@ body.ribbon-loose .bow .tail.right { transform: translate(18%,-38%) rotate(18deg
   left: 50%; top: 50%;
   transform: translate(-50%, -44%) scale(.96);
   opacity: 0;
-  transition: opacity 1s ease,
-              transform 1.1s cubic-bezier(.24,.82,.22,1);
+  transition: opacity 1s ease, transform 1.1s cubic-bezier(.24,.82,.22,1);
   z-index: 6;
   pointer-events: none;
 }
@@ -281,8 +267,6 @@ body.ribbon-loose .bow .tail.right { transform: translate(18%,-38%) rotate(18deg
   overflow: hidden;
   padding: calc(18px + var(--sealH) + 18px) 28px 72px;
 }
-
-/* زخرفة خفيفة */
 .paper::before {
   content:"";
   position:absolute; inset:8px;
@@ -293,18 +277,16 @@ body.ribbon-loose .bow .tail.right { transform: translate(18%,-38%) rotate(18deg
     radial-gradient(12px 12px at calc(100% - 14px) 14px, rgba(212,175,55,.55), transparent 60%),
     radial-gradient(12px 12px at 14px calc(100% - 14px), rgba(212,175,55,.55), transparent 60%),
     radial-gradient(12px 12px at calc(100% - 14px) calc(100% - 14px), rgba(212,175,55,.55), transparent 60%);
-  box-shadow: 
-    inset 0 0 0 1px rgba(212,175,55,.45),
-    inset 0 0 20px rgba(212,175,55,.15);
+  box-shadow: inset 0 0 0 1px rgba(212,175,55,.45),
+              inset 0 0 20px rgba(212,175,55,.15);
 }
 .paper::after {
   content:"";
   position:absolute; inset:0;
   border-radius:18px;
   pointer-events:none;
-  background: 
-    radial-gradient(800px 420px at -10% 0%, rgba(139,107,34,.06), transparent 60%),
-    radial-gradient(800px 420px at 110% 100%, rgba(139,107,34,.06), transparent 60%);
+  background: radial-gradient(800px 420px at -10% 0%, rgba(139,107,34,.06), transparent 60%),
+              radial-gradient(800px 420px at 110% 100%, rgba(139,107,34,.06), transparent 60%);
 }
 
 /* الحاوية الداخلية للرسالة */
@@ -314,8 +296,6 @@ body.ribbon-loose .bow .tail.right { transform: translate(18%,-38%) rotate(18deg
   background:transparent;
   max-height:none;
 }
-
-/* زخرفة أعلى وأسفل */
 .message-frame::before,
 .message-frame::after {
   content:"❦";
@@ -327,7 +307,6 @@ body.ribbon-loose .bow .tail.right { transform: translate(18%,-38%) rotate(18deg
 }
 .message-frame::before { top:6px; }
 .message-frame::after  { bottom:6px; }
-
 /* ==================== الختم ==================== */
 .wax-seal.header {
   position:absolute;
@@ -345,10 +324,11 @@ body.ribbon-loose .bow .tail.right { transform: translate(18%,-38%) rotate(18deg
   animation: sealPulse 6.4s ease-in-out infinite;
 }
 .wax-seal.header::before {
-  content:""; position:absolute; inset:0;
+  content:"";
+  position:absolute; inset:0;
   border-radius:50%;
   pointer-events:none;
-  background: radial-gradient(ellipse at 35% 30%, rgba(255,255,255,.38), rgba(255,255,255,0) 60%);
+  background: radial-gradient(ellipse at 35% 30%, rgba(255,255,255,.38), transparent 60%);
   filter: blur(1px);
 }
 .wax-seal.header::after {
@@ -358,9 +338,9 @@ body.ribbon-loose .bow .tail.right { transform: translate(18%,-38%) rotate(18deg
   border-radius:50%;
   pointer-events:none;
   background: linear-gradient(120deg,
-              rgba(255,255,255,0) 45%,
+              transparent 45%,
               rgba(255,255,255,.33) 50%,
-              rgba(255,255,255,0) 55%);
+              transparent 55%);
   transform: rotate(12deg);
   animation: sealSheen 5.8s ease-in-out infinite;
 }
@@ -394,10 +374,10 @@ body.ribbon-loose .bow .tail.right { transform: translate(18%,-38%) rotate(18deg
   100%   { filter: drop-shadow(0 0 6px rgba(212,175,55,.4)); }
 }
 @keyframes sealSheen {
-  0%   { transform: translate(-20%, -20%) rotate(12deg); opacity:.0; }
+  0%   { transform: translate(-20%, -20%) rotate(12deg); opacity:0; }
   36%  { transform: translate(0,0) rotate(12deg); opacity:.85; }
-  52%  { transform: translate(12%, 12%) rotate(12deg); opacity:.0; }
-  100% { transform: translate(12%, 12%) rotate(12deg); opacity:.0; }
+  52%  { transform: translate(12%, 12%) rotate(12deg); opacity:0; }
+  100% { transform: translate(12%, 12%) rotate(12deg); opacity:0; }
 }
 
 /* ==================== النص ==================== */
@@ -408,8 +388,10 @@ body.ribbon-loose .bow .tail.right { transform: translate(18%,-38%) rotate(18deg
   white-space: pre-wrap;
   color: var(--ink);
   text-align: justify;
-  overflow-wrap: anywhere; word-break: break-word; hyphens: auto;
-  direction: rtl;       /* الافتراضي عربي */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+  direction: rtl;        /* الافتراضي عربي */
   unicode-bidi: plaintext;
   text-indent: 1.4em;
 }
@@ -419,8 +401,9 @@ html[lang="en"] .message.handwrite {
 }
 html[lang="ar"] .message.handwrite {
   direction:rtl;
-  font-family:"Scheherazade New",serif;
+  font-family:"Tahoma","Arial",sans-serif;
 }
+
 /* Drop cap للإنكليزي */
 html[lang="en"] .message.handwrite::first-letter {
   font-size: calc(var(--text-size)*2.1);
@@ -450,7 +433,7 @@ html[lang="en"] .message.handwrite::first-letter {
   text-align:center;
 }
 .signature-name {
-  font-family:"Great Vibes","Scheherazade New",cursive;
+  font-family:"Great Vibes","Tahoma","Arial",sans-serif;
   font-size: clamp(22px, 4.8vw, 30px);
   color: #4B2E2A;
 }
@@ -522,7 +505,7 @@ html[lang="en"] .message.handwrite::first-letter {
     0 20px 46px rgba(0,0,0,.55),
     0 0 30px rgba(212,175,55,.28);
   overflow:hidden;
-  font-family:"Scheherazade New",serif;
+  font-family:"Tahoma","Arial",sans-serif;
   color:#fdf0d6;
   position:relative;
 }
@@ -622,7 +605,7 @@ html[lang="en"] .message.handwrite::first-letter {
                0 0 14px rgba(212,175,55,.12);
 }
 
-/* Mobile-specific overrides */
+/* موبايل */
 @media (max-width: 600px) {
   .message.handwrite {
     --text-size: 14px;
