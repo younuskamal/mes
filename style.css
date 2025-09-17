@@ -15,12 +15,20 @@
 /* ==================== الخطوط ==================== */
 
 /* الخطوط العربية (ستاندر) */
+/* الخطوط العربية (iOS compatible) */
 html[lang="ar"] .message.handwrite,
 html[lang="ar"] .signature-name,
 html[lang="ar"] .btn,
 html[lang="ar"] .notice-title,
 html[lang="ar"] .notice-text {
-  font-family: "Tahoma","Arial","Helvetica Neue",sans-serif;
+  font-family:
+    -apple-system, /* خط النظام الأساسي على iOS */
+    BlinkMacSystemFont, 
+    "Segoe UI", 
+    "Tahoma",
+    "Arial",
+    "Helvetica Neue",
+    sans-serif;
 }
 
 /* خط إنكليزي (Great Vibes) */
